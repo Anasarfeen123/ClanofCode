@@ -8,7 +8,7 @@ function toSnakeCase(str) {
         .join('_');
 }
 
-const API_URL = "http://localhost:8000"; // Ensure your backend runs on this port
+const API_URL = "/api";
 
 async function getDiagnosis(appState) {
   // Aggregate symptoms from ALL regions

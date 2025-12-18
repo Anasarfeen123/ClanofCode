@@ -5,7 +5,9 @@ import pandas as pd
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Symptom Disease Predictor")
+# 1. Add root_path="/api" so FastAPI knows it's running under /api
+app = FastAPI(title="Symptom Disease Predictor", root_path="/api")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,14 +15,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# =========================
-# Load models & metadata
-# =========================
-# Robust path handling: Works if run from root OR from backend/
+# 2. Update Model Directory Path
+# Since we moved 'model' inside 'api', it is now in the same directory as this script
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Check if we are in backend/ subdir, if so go up one level
-PROJECT_ROOT = os.path.dirname(BASE_DIR) if os.path.basename(BASE_DIR) == "backend" else BASE_DIR
-MODEL_DIR = os.path.join(PROJECT_ROOT, "model")
+MODEL_DIR = os.path.join(BASE_DIR, "model") 
 
 try:
     acute_model = joblib.load(os.path.join(MODEL_DIR, "acute_model.joblib"))
@@ -28,7 +26,7 @@ try:
     metadata = joblib.load(os.path.join(MODEL_DIR, "feature_metadata.joblib"))
     print("Models loaded successfully.")
 except FileNotFoundError as e:
-    print(f"Error loading models: {e}. Make sure you run model/train.py first.")
+    print(f"Error loading models: {e}. Ensure 'model' folder is inside 'api' folder.")
     raise e
 
 acute_features = metadata["acute_features"]
