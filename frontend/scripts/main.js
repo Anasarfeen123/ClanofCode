@@ -1,69 +1,61 @@
-type: uploaded file
-fileName: ClanofCode/frontend/scripts/main.js
-fullContent:
-function saveSymptoms() {
-  const region = appState.selectedRegion;
-  const symptoms = appState.symptomSeverities[region] || {};
-    document.getElementById("body-continue-btn").disabled = false;
+// frontend/scripts/main.js
 
-  console.log("DEBUG STATE:", appState); // 👈 keep this once
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Initialize State (assuming you have a state.js or similar)
+    // If state is not global, ensure it is accessible here.
+    console.log("App Initialized");
 
-  document.getElementById("sum-age").textContent = appState.age;
-  document.getElementById("sum-gender").textContent = appState.gender;
-  document.getElementById("sum-severe").textContent = appState.severe;
-  document.getElementById("sum-region").textContent = region;
-  document.getElementById("sum-symptoms").textContent =
-    Object.keys(symptoms).join(", ") || "None";
+    // 2. Attach Event Listener to the new Button
+    const diagnoseBtn = document.getElementById("diagnose-btn");
+    
+    if (diagnoseBtn) {
+        diagnoseBtn.addEventListener("click", async () => {
+            console.log("Diagnosis requested...");
+            
+            // Show loading state
+            diagnoseBtn.textContent = "Analyzing...";
+            diagnoseBtn.disabled = true;
 
-  const results = getDiagnosis(appState);
-  renderDiagnosis(results);
+            try {
+                // Call the API function from api.js
+                // Ensure 'appState' is the global state object from state.js
+                const predictions = await getDiagnosis(appState);
+                
+                // Render results
+                displayResults(predictions);
+                
+            } catch (err) {
+                console.error(err);
+                alert("Failed to get diagnosis.");
+            } finally {
+                // Reset button
+                diagnoseBtn.textContent = "Get Diagnosis";
+                diagnoseBtn.disabled = false;
+            }
+        });
+    }
+});
 
-  goToScreen(4);
-}
+// Helper function to display results in the HTML
+function displayResults(predictions) {
+    const resultsContainer = document.getElementById("results-area");
+    if (!resultsContainer) return;
 
-function renderDiagnosis(results) {
-  const container = document.getElementById("results-container");
-  container.innerHTML = "";
+    resultsContainer.innerHTML = "<h3>Diagnosis Results</h3>";
+    
+    if (predictions.length === 0) {
+        resultsContainer.innerHTML += "<p>No clear diagnosis found.</p>";
+        return;
+    }
 
-  results.forEach(r => {
-    const card = document.createElement("div");
-    card.className = `diagnostic-card ${severityClass(r.severity)}`;
-
-    card.innerHTML = `
-      <h3>${r.diagnosis}</h3>
-      <p><strong>Severity:</strong> ${r.severity}</p>
-      <p><strong>Advice:</strong> ${r.advice}</p>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-function severityClass(level) {
-  if (level === "high") return "strong";
-  if (level === "moderate") return "moderate";
-  return "low";
-}
-function goToBodyMap() {
-  if (!state.age || !state.gender || state.severe === null) {
-    alert("Fill everything first");
-    return;
-  }
-  goToScreen(2);
-}
-
-function goToSymptoms() {
-  if (!state.region) {
-    alert("Select a region first");
-    return;
-  }
-
-  loadSymptomsForRegion(state.region);
-  goToScreen(3);
-}
-function goToScreen(n) {
-  document.querySelectorAll(".screen").forEach(s =>
-    s.classList.remove("active")
-  );
-  document.getElementById(`screen-${n}`).classList.add("active");
+    const list = document.createElement("ul");
+    predictions.forEach(p => {
+        const item = document.createElement("li");
+        // Convert probability to percentage
+        const confidence = (p.prob * 100).toFixed(1);
+        item.innerHTML = `<strong>${p.disease}</strong> (${confidence}%) <br> <small>Type: ${p.model}</small>`;
+        list.appendChild(item);
+    });
+    
+    resultsContainer.appendChild(list);
 }

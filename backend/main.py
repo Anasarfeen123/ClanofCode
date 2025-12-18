@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import pandas as pd
+import os
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Symptom Disease Predictor")
@@ -15,15 +16,25 @@ app.add_middleware(
 # =========================
 # Load models & metadata
 # =========================
-acute_model = joblib.load("model/acute_model.joblib")
-chronic_model = joblib.load("model/chronic_model.joblib")
-metadata = joblib.load("model/feature_metadata.joblib")
+# Robust path handling: Works if run from root OR from backend/
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Check if we are in backend/ subdir, if so go up one level
+PROJECT_ROOT = os.path.dirname(BASE_DIR) if os.path.basename(BASE_DIR) == "backend" else BASE_DIR
+MODEL_DIR = os.path.join(PROJECT_ROOT, "model")
+
+try:
+    acute_model = joblib.load(os.path.join(MODEL_DIR, "acute_model.joblib"))
+    chronic_model = joblib.load(os.path.join(MODEL_DIR, "chronic_model.joblib"))
+    metadata = joblib.load(os.path.join(MODEL_DIR, "feature_metadata.joblib"))
+    print("Models loaded successfully.")
+except FileNotFoundError as e:
+    print(f"Error loading models: {e}. Make sure you run model/train.py first.")
+    raise e
 
 acute_features = metadata["acute_features"]
 chronic_features = metadata["chronic_features"]
 
 MIN_CONFIDENCE = 0.05
-
 
 # =========================
 # Request schema
@@ -36,10 +47,14 @@ class SymptomRequest(BaseModel):
 # Helper
 # =========================
 def build_input(symptoms, features):
-    return pd.DataFrame([{
-        f: symptoms.get(f, 0)
+    # CRITICAL FIX: The model was trained on binary data (0 or 1).
+    # The frontend sends severity (1-4). We must convert severity to binary
+    # for the LogisticRegression model to interpret it correctly.
+    input_data = {
+        f: 1 if symptoms.get(f, 0) > 0 else 0
         for f in features
-    }])
+    }
+    return pd.DataFrame([input_data])
 
 # =========================
 # Prediction endpoint
@@ -48,6 +63,7 @@ def build_input(symptoms, features):
 def predict(req: SymptomRequest):
     results = []
 
+    # Predict using Acute Model
     if req.type in ["acute", "not_sure"]:
         X = build_input(req.symptoms, acute_features)
         probs = acute_model.predict_proba(X)[0]
@@ -59,6 +75,7 @@ def predict(req: SymptomRequest):
             if p >= MIN_CONFIDENCE
         ]
 
+    # Predict using Chronic Model
     if req.type in ["chronic", "not_sure"]:
         X = build_input(req.symptoms, chronic_features)
         probs = chronic_model.predict_proba(X)[0]
@@ -70,6 +87,7 @@ def predict(req: SymptomRequest):
             if p >= MIN_CONFIDENCE
         ]
 
+    # Sort by probability (descending)
     results = sorted(results, key=lambda x: x["prob"], reverse=True)
 
     return {

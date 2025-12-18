@@ -44,9 +44,9 @@ const symptoms = SYMPTOMS_BY_REGION[region];
       <span class="symptom-name">${symptom}</span>
       <div class="severity-options">
         <button class="severity-option ${existingVal===1?'selected':''}" onclick="setSeverity('${symptom}', 1, this)">Mild</button>
-        <button class="severity-option ${existingVal===2?'selected':''}" onclick="setSeverity('${symptom}', 2, this)">Mod</button>
-        <button class="severity-option ${existingVal===3?'selected':''}" onclick="setSeverity('${symptom}', 3, this)">Sev</button>
-        <button class="severity-option ${existingVal===4?'selected':''}" onclick="setSeverity('${symptom}', 4, this)">Bad</button>
+        <button class="severity-option ${existingVal===2?'selected':''}" onclick="setSeverity('${symptom}', 2, this)">Moderate</button>
+        <button class="severity-option ${existingVal===3?'selected':''}" onclick="setSeverity('${symptom}', 3, this)">Severe</button>
+        <button class="severity-option ${existingVal===4?'selected':''}" onclick="setSeverity('${symptom}', 4, this)">Unbearable</button>
       </div>
     `;
     if (existingVal) div.classList.add('has-severity');

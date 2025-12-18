@@ -192,7 +192,7 @@ input[type="number"]:focus {
 }
 
 .btn-secondary {
-    padding: 12px 18px;
+    padding: 5px 18px;
     border-radius: 10px;
     border: 1.8px solid var(--border-light);
     background: white;
@@ -416,6 +416,8 @@ input[type="number"]:focus {
 
 .severity-option {
     flex: 1;
+    font-size:xx-large;
+    margin-right: 120px;
     padding: 10px;
     text-align: center;
     border-radius: 8px;
@@ -495,4 +497,44 @@ input[type="number"]:focus {
 @media (max-width: 768px) {
     main { padding: 24px; }
     .body-map-wrapper { flex-direction: column; gap: 28px; }
+}
+
+.action-btn {
+    margin-top: 28px;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #e74c3c;
+    transition: background 0.2s ease, transform 0.15s ease;
+/* 
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+    transition: background 0.3s; */
+}
+
+.action-btn:hover {
+    background-color: #c0392b;
+}
+
+.action-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.results-container {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 5px solid #3498db;
 }
