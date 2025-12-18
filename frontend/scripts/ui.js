@@ -59,3 +59,7 @@ function goToSymptoms() {
   renderSymptomChecklist(appState.selectedRegion);
   goToScreen(3);
 }
+function toggleButtonGroup(parent, clickedBtn) {
+  [...parent.children].forEach(btn => btn.classList.remove("active"));
+  clickedBtn.classList.add("active");
+}

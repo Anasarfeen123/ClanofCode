@@ -4,6 +4,7 @@ fullContent:
 function saveSymptoms() {
   const region = appState.selectedRegion;
   const symptoms = appState.symptomSeverities[region] || {};
+    document.getElementById("body-continue-btn").disabled = false;
 
   console.log("DEBUG STATE:", appState); // 👈 keep this once
 
@@ -42,4 +43,27 @@ function severityClass(level) {
   if (level === "high") return "strong";
   if (level === "moderate") return "moderate";
   return "low";
+}
+function goToBodyMap() {
+  if (!state.age || !state.gender || state.severe === null) {
+    alert("Fill everything first");
+    return;
+  }
+  goToScreen(2);
+}
+
+function goToSymptoms() {
+  if (!state.region) {
+    alert("Select a region first");
+    return;
+  }
+
+  loadSymptomsForRegion(state.region);
+  goToScreen(3);
+}
+function goToScreen(n) {
+  document.querySelectorAll(".screen").forEach(s =>
+    s.classList.remove("active")
+  );
+  document.getElementById(`screen-${n}`).classList.add("active");
 }

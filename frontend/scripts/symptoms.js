@@ -1,4 +1,6 @@
 // scripts/symptoms.js
+document.getElementById("symptom-container").innerHTML = "";
+
 
 function setSeverity(symptom, level, el) {
   const region = appState.selectedRegion;
@@ -27,7 +29,9 @@ function renderSymptomChecklist(region) {
   const title = document.getElementById("region-title");
   if(title) title.innerText = `Rate Your Symptoms (${region})`;
 
-  const symptoms = symptomMap[region] || [];
+//   const symptoms = symptomMap[region] || [];
+const symptoms = SYMPTOMS_BY_REGION[region];
+
 
   symptoms.forEach(symptom => {
     const div = document.createElement("div");
@@ -46,6 +50,23 @@ function renderSymptomChecklist(region) {
       </div>
     `;
     if (existingVal) div.classList.add('has-severity');
+    container.appendChild(div);
+  });
+}function loadSymptomsForRegion(region) {
+  const container = document.getElementById("symptom-container");
+  container.innerHTML = "";
+
+  const symptoms = SYMPTOMS_BY_REGION[region];
+
+  if (!symptoms) {
+    container.innerHTML = "<p>No symptoms found.</p>";
+    return;
+  }
+
+  symptoms.forEach(symptom => {
+    const div = document.createElement("div");
+    div.className = "symptom-item";
+    div.innerHTML = `<div class="symptom-name">${symptom}</div>`;
     container.appendChild(div);
   });
 }
