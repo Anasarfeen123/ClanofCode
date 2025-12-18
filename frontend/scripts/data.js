@@ -1,103 +1,207 @@
-window.SYMPTOMS_BY_REGION = {
-"Head": [
-    "Headache",
-    "Dizziness",
-    "Pain behind the eyes",
-    "Sinus pressure",
-    "Loss of balance",
-    "Loss of smell",
-    "Visual disturbances",
-    "Blurred and distorted vision",
-    "Slurred speech"
-  ],
-  "Throat": [
-    "Throat irritation",
-    "Ulcers on tongue",
-    "Patches in throat"
-  ],
-  "Chest": [
-    "Chest pain",
-    "Breathlessness",
-    "Palpitations",
-    "Fast heart rate"
-  ],
-  "Abdomen": [
-    "Abdominal pain",
-    "Stomach pain",
-    "Belly pain",
-    "Indigestion",
-    "Distention of abdomen",
-    "Pain during bowel movements",
-    "Passage of gases",
-    "Constipation",
-    "Diarrhoea",
-    "Nausea",
-    "Vomiting",
-    "Stomach bleeding",
-    "Loss of appetite",
-    "Swelling of stomach"
-  ],
-  "Pelvis": [
-    "Bladder discomfort",
-    "Burning micturition",
-    "Spotting urination",
-    "Foul smell of urine",
-    "Continuous feel of urine"
-  ],
-  "Neck": [
-    "Neck pain",
-    "Stiff neck",
-    "Movement stiffness"
-  ],
-  "Back": [
-    "Back pain"
-  ],
-  "Left Arm": [
-    "Muscle pain",
-    "Muscle weakness",
-    "Joint pain"
-  ],
-  "Right Arm": [
-    "Muscle pain",
-    "Muscle weakness",
-    "Joint pain"
-  ],
-  "Left Leg": [
-    "Hip joint pain",
-    "Knee pain",
-    "Joint pain",
-    "Muscle pain",
-    "Muscle weakness",
-    "Muscle wasting",
-    "Cramps",
-    "Weakness in limbs",
-    "Painful walking"
-  ],
-  "Right Leg": [
-    "Hip joint pain",
-    "Knee pain",
-    "Joint pain",
-    "Muscle pain",
-    "Muscle weakness",
-    "Muscle wasting",
-    "Cramps",
-    "Weakness in limbs",
-    "Painful walking"
-  ],
-  "Skin": [
-    "Skin rash",
-    "Itching",
-    "Dischromic patches",
-    "Skin peeling",
-    "Redness of eyes"
-  ],
-  "General": [
-    "Fatigue",
-    "Lethargy",
-    "Malaise",
-    "Sweating",
-    "Chills",
-    "Shivering",
-    "Dehydration"
-  ]
+// Data extracted from symp_data.csv and mapped to body regions
+
+const SYMPTOMS_BY_REGION = {
+    "Head": [
+        "Headache",
+        "Dizziness",
+        "Migraine",
+        "Sinus Pressure",
+        "Pain Behind The Eyes",
+        "Blurred And Distorted Vision",
+        "Redness Of Eyes",
+        "Watering From Eyes",
+        "Puffy Face And Eyes",
+        "Yellowing Of Eyes",
+        "Visual Disturbances",
+        "Sunken Eyes",
+        "Loss Of Balance",
+        "Unsteadiness",
+        "Spinning Movements",
+        "Lack Of Concentration",
+        "Altered Sensorium",
+        "Coma",
+        "Runny Nose",
+        "Continuous Sneezing",
+        "Loss Of Smell",
+        "Red Sore Around Nose"
+    ],
+    "Head (Back)": [
+        "Stiff Neck",
+        "Neck Pain",
+        "Headache"
+    ],
+    "Neck": [
+        "Neck Pain",
+        "Stiff Neck",
+        "Enlarged Thyroid",
+        "Throat Irritation",
+        "Patches In Throat",
+        "Slurred Speech",
+        "Drying And Tingling Lips",
+        "Ulcers On Tongue"
+    ],
+    "Chest": [
+        "Chest Pain",
+        "Breathlessness",
+        "Palpitations",
+        "Fast Heart Rate",
+        "Congestion",
+        "Cough",
+        "Phlegm",
+        "Blood In Sputum",
+        "Mucoid Sputum",
+        "Rusty Sputum"
+    ],
+    "Abdomen": [
+        "Abdominal Pain",
+        "Stomach Pain",
+        "Belly Pain",
+        "Acidity",
+        "Indigestion",
+        "Nausea",
+        "Vomiting",
+        "Diarrhoea",
+        "Constipation",
+        "Swelling Of Stomach",
+        "Distention Of Abdomen",
+        "Stomach Bleeding",
+        "Passage Of Gases",
+        "Pain During Bowel Movements",
+        "Pain In Anal Region",
+        "Irritation In Anus",
+        "Bloody Stool",
+        "Abnormal Menstruation",
+        "Bladder Discomfort",
+        "Burning Micturition",
+        "Continuous Feel Of Urine",
+        "Spotting Urination",
+        "Dark Urine",
+        "Yellow Urine",
+        "Foul Smell Of Urine",
+        "Polyuria"
+    ],
+    "Upper Back": [
+        "Back Pain",
+        "Muscle Pain",
+        "Stiff Neck"
+    ],
+    "Lower Back": [
+        "Back Pain",
+        "Hip Joint Pain"
+    ],
+    "Left Arm": [
+        "Muscle Pain",
+        "Muscle Weakness",
+        "Weakness In Limbs",
+        "Cold Hands And Feets",
+        "Swollen Extremeties",
+        "Joint Pain",
+        "Swelling Joints"
+    ],
+    "Right Arm": [
+        "Muscle Pain",
+        "Muscle Weakness",
+        "Weakness In Limbs",
+        "Cold Hands And Feets",
+        "Swollen Extremeties",
+        "Joint Pain",
+        "Swelling Joints"
+    ],
+    "Left Arm (Back)": [
+        "Muscle Pain",
+        "Joint Pain"
+    ],
+    "Right Arm (Back)": [
+        "Muscle Pain",
+        "Joint Pain"
+    ],
+    "Left Leg": [
+        "Knee Pain",
+        "Hip Joint Pain",
+        "Muscle Pain",
+        "Muscle Weakness",
+        "Swollen Legs",
+        "Prominent Veins On Calf",
+        "Painful Walking",
+        "Joint Pain",
+        "Swelling Joints"
+    ],
+    "Right Leg": [
+        "Knee Pain",
+        "Hip Joint Pain",
+        "Muscle Pain",
+        "Muscle Weakness",
+        "Swollen Legs",
+        "Prominent Veins On Calf",
+        "Painful Walking",
+        "Joint Pain",
+        "Swelling Joints"
+    ],
+    "Left Leg (Back)": [
+        "Muscle Pain",
+        "Painful Walking",
+        "Prominent Veins On Calf"
+    ],
+    "Right Leg (Back)": [
+        "Muscle Pain",
+        "Painful Walking",
+        "Prominent Veins On Calf"
+    ],
+    "Skin": [
+        "Itching",
+        "Skin Rash",
+        "Nodal Skin Eruptions",
+        "Blister",
+        "Red Spots Over Body",
+        "Dischromic Patches",
+        "Yellowish Skin",
+        "Bruising",
+        "Pus Filled Pimples",
+        "Blackheads",
+        "Scurring",
+        "Skin Peeling",
+        "Silver Like Dusting",
+        "Yellow Crust Ooze",
+        "Brittle Nails",
+        "Small Dents In Nails",
+        "Inflammatory Nails",
+        "Internal Itching"
+    ],
+    "General": [
+        "High Fever",
+        "Mild Fever",
+        "Chills",
+        "Shivering",
+        "Fatigue",
+        "Lethargy",
+        "Malaise",
+        "Restlessness",
+        "Sweating",
+        "Dehydration",
+        "Weight Loss",
+        "Weight Gain",
+        "Obesity",
+        "Loss Of Appetite",
+        "Excessive Hunger",
+        "Increased Appetite",
+        "Irregular Sugar Level",
+        "Fluid Overload",
+        "Swelled Lymph Nodes",
+        "Swollen Blood Vessels",
+        "Acute Liver Failure",
+        "Toxic Look (Typhos)",
+        "Mood Swings",
+        "Anxiety",
+        "Irritability",
+        "Depression",
+        "Movement Stiffness",
+        "Muscle Wasting",
+        "Generalized Body Pain",
+        "Weakness Of One Body Side",
+        "Family History",
+        "History Of Alcohol Consumption",
+        "Extra Marital Contacts",
+        "Receiving Blood Transfusion",
+        "Receiving Unsterile Injections"
+    ]
 };

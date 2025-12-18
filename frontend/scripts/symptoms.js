@@ -1,5 +1,11 @@
 // scripts/symptoms.js
-document.getElementById("symptom-container").innerHTML = "";
+const SEVERITY_LEVELS = [
+  { label: "None", value: 0 },
+  { label: "Mild", value: 1 },
+  { label: "Moderate", value: 2 },
+  { label: "Severe", value: 3 },
+  { label: "Unbearable", value: 4 }
+];
 
 
 function setSeverity(symptom, level, el) {
@@ -11,62 +17,63 @@ function setSeverity(symptom, level, el) {
 
   appState.symptomSeverities[region][symptom] = level;
 
+  // Visual Feedback
   const parent = el.closest(".symptom-item");
   parent.classList.add("has-severity");
 
+  // Remove 'selected' from siblings
   parent.querySelectorAll(".severity-option")
     .forEach(b => b.classList.remove("selected"));
 
+  // Add 'selected' to clicked
   el.classList.add("selected");
 }
 
-// --- MISSING FUNCTION ADDED BELOW ---
-
 function renderSymptomChecklist(region) {
-  const container = document.getElementById("symptom-container");
-  container.innerHTML = ""; // Clear previous
-
-  const title = document.getElementById("region-title");
-  if(title) title.innerText = `Rate Your Symptoms (${region})`;
-
-//   const symptoms = symptomMap[region] || [];
-const symptoms = SYMPTOMS_BY_REGION[region];
-
-
-  symptoms.forEach(symptom => {
-    const div = document.createElement("div");
-    div.className = "symptom-item";
-    
-    // Check if we already have a value for this (if user went back and forth)
-    const existingVal = appState.symptomSeverities[region]?.[symptom];
-
-    div.innerHTML = `
-      <span class="symptom-name">${symptom}</span>
-      <div class="severity-options">
-        <button class="severity-option ${existingVal===1?'selected':''}" onclick="setSeverity('${symptom}', 1, this)">Mild</button>
-        <button class="severity-option ${existingVal===2?'selected':''}" onclick="setSeverity('${symptom}', 2, this)">Moderate</button>
-        <button class="severity-option ${existingVal===3?'selected':''}" onclick="setSeverity('${symptom}', 3, this)">Severe</button>
-        <button class="severity-option ${existingVal===4?'selected':''}" onclick="setSeverity('${symptom}', 4, this)">Unbearable</button>
-      </div>
-    `;
-    if (existingVal) div.classList.add('has-severity');
-    container.appendChild(div);
-  });
-}function loadSymptomsForRegion(region) {
   const container = document.getElementById("symptom-container");
   container.innerHTML = "";
 
-  const symptoms = SYMPTOMS_BY_REGION[region];
+  const title = document.getElementById("region-title");
+  if (title) title.innerText = `Rate Symptoms (${region})`;
 
-  if (!symptoms) {
-    container.innerHTML = "<p>No symptoms found.</p>";
+  const symptoms = SYMPTOMS_BY_REGION[region] || [];
+
+  if (symptoms.length === 0) {
+    container.innerHTML = "<p>No specific symptoms listed for this region.</p>";
     return;
   }
 
   symptoms.forEach(symptom => {
     const div = document.createElement("div");
     div.className = "symptom-item";
-    div.innerHTML = `<div class="symptom-name">${symptom}</div>`;
+
+    const name = document.createElement("span");
+    name.className = "symptom-name";
+    name.textContent = symptom;
+
+    const scale = document.createElement("div");
+    scale.className = "severity-scale";
+
+    const existingVal =
+      appState.symptomSeverities[region]?.[symptom] ?? 0;
+
+    SEVERITY_LEVELS.forEach(({ label, value }) => {
+      const btn = document.createElement("button");
+      btn.className = "severity-option";
+      btn.dataset.sev = value;
+      btn.textContent = label;
+
+      if (existingVal === value) {
+        btn.classList.add("selected");
+        div.classList.add("has-severity");
+      }
+
+      btn.onclick = () => setSeverity(symptom, value, btn);
+      scale.appendChild(btn);
+    });
+
+    div.appendChild(name);
+    div.appendChild(scale);
     container.appendChild(div);
   });
 }

@@ -4,23 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Symptom Checker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/main.css" />
 </head>
 
 <body>
-  <div class="container">
+  <div class="container fade-in">
     <header>
       <h1>🏥 Symptom Checker</h1>
       <p id="header-subtitle">Let's start with some basic questions</p>
     </header>
 
     <main>
-      <!-- Screen 1 -->
       <div id="screen-1" class="screen active">
         <h2>Basic Information</h2>
 
-        <label>Age</label>
-        <input type="number" id="age" placeholder="Enter your age" min="1" max="120">
+        <label for="age">Age</label>
+        <input type="number" id="age" placeholder="e.g. 25" min="1" max="120">
 
         <label>Sex</label>
         <div class="gender-buttons">
@@ -30,32 +32,32 @@
         </div>
 
         <div class="question">
-          <p>Are your symptoms severe or sudden?</p>
+          <p>How long did you had the symptoms?</p>
           <div class="question-buttons">
-            <button onclick="answerSevere('Yes')">Yes</button>
-            <button onclick="answerSevere('No')">No</button>
+            <button onclick="answerSevere('Yes')">More than 10 days</button>
+            <button onclick="answerSevere('No')">Less than 10 days</button>
           </div>
         </div>
 
         <button class="btn-primary" onclick="goToBodyMap()">Continue to Body Map →</button>
       </div>
 
-      <!-- Screen 2 -->
       <div id="screen-2" class="screen">
         <h2>Select where you feel symptoms</h2>
+        <p class="helper-text">Tap a region to add symptoms. You can select multiple regions.</p>
 
         <div class="body-map-wrapper">
           <div class="body-map">
             <h3>Front View</h3>
             <div class="body-map-container">
               <img src="assets/front.png" alt="Front body diagram">
-              <div class="region head" onclick="selectRegion('Head',this)"><span class="region-label">Head</span></div>
-              <div class="region chest" onclick="selectRegion('Chest',this)"><span class="region-label">Chest</span></div>
-              <div class="region abdomen" onclick="selectRegion('Abdomen',this)"><span class="region-label">Abdomen</span></div>
-              <div class="region left-arm" onclick="selectRegion('Left Arm',this)"><span class="region-label">Left Arm</span></div>
-              <div class="region right-arm" onclick="selectRegion('Right Arm',this)"><span class="region-label">Right Arm</span></div>
-              <div class="region left-leg" onclick="selectRegion('Left Leg',this)"><span class="region-label">Left Leg</span></div>
-              <div class="region right-leg" onclick="selectRegion('Right Leg',this)"><span class="region-label">Right Leg</span></div>
+              <div class="region head" onclick="selectRegion('Head',this)"><div class="region-dot"></div><span class="region-label">Head</span></div>
+              <div class="region chest" onclick="selectRegion('Chest',this)"><div class="region-dot"></div><span class="region-label">Chest</span></div>
+              <div class="region abdomen" onclick="selectRegion('Abdomen',this)"><div class="region-dot"></div><span class="region-label">Abdomen</span></div>
+              <div class="region left-arm" onclick="selectRegion('Left Arm',this)"><div class="region-dot"></div><span class="region-label">L. Arm</span></div>
+              <div class="region right-arm" onclick="selectRegion('Right Arm',this)"><div class="region-dot"></div><span class="region-label">R. Arm</span></div>
+              <div class="region left-leg" onclick="selectRegion('Left Leg',this)"><div class="region-dot"></div><span class="region-label">L. Leg</span></div>
+              <div class="region right-leg" onclick="selectRegion('Right Leg',this)"><div class="region-dot"></div><span class="region-label">R. Leg</span></div>
             </div>
           </div>
 
@@ -63,68 +65,81 @@
             <h3>Back View</h3>
             <div class="body-map-container">
               <img src="assets/back.png" alt="Back body diagram">
-              <div class="region back-head" onclick="selectRegion('Head (Back)',this)"><span class="region-label">Head</span></div>
-              <div class="region upper-back" onclick="selectRegion('Upper Back',this)"><span class="region-label">Upper Back</span></div>
-              <div class="region lower-back" onclick="selectRegion('Lower Back',this)"><span class="region-label">Lower Back</span></div>
-              <div class="region back-left-arm" onclick="selectRegion('Left Arm (Back)',this)"><span class="region-label">Left Arm</span></div>
-              <div class="region back-right-arm" onclick="selectRegion('Right Arm (Back)',this)"><span class="region-label">Right Arm</span></div>
-              <div class="region back-left-leg" onclick="selectRegion('Left Leg (Back)',this)"><span class="region-label">Left Leg</span></div>
-              <div class="region back-right-leg" onclick="selectRegion('Right Leg (Back)',this)"><span class="region-label">Right Leg</span></div>
+              <div class="region back-head" onclick="selectRegion('Head (Back)',this)"><div class="region-dot"></div><span class="region-label">Head</span></div>
+              <div class="region upper-back" onclick="selectRegion('Upper Back',this)"><div class="region-dot"></div><span class="region-label">Upper Back</span></div>
+              <div class="region lower-back" onclick="selectRegion('Lower Back',this)"><div class="region-dot"></div><span class="region-label">Lower Back</span></div>
+              <div class="region back-left-arm" onclick="selectRegion('Left Arm (Back)',this)"><div class="region-dot"></div><span class="region-label">L. Arm</span></div>
+              <div class="region back-right-arm" onclick="selectRegion('Right Arm (Back)',this)"><div class="region-dot"></div><span class="region-label">R. Arm</span></div>
+              <div class="region back-left-leg" onclick="selectRegion('Left Leg (Back)',this)"><div class="region-dot"></div><span class="region-label">L. Leg</span></div>
+              <div class="region back-right-leg" onclick="selectRegion('Right Leg (Back)',this)"><div class="region-dot"></div><span class="region-label">R. Leg</span></div>
             </div>
           </div>
         </div>
 
-        <p id="selected-region"></p>
+        <div class="extra-regions">
+            <p style="margin-bottom:8px; font-size:14px; font-weight:600; color:var(--text-muted);">Other Symptoms:</p>
+            <div class="extra-regions-grid">
+                <button class="region-btn" onclick="selectRegion('Skin', this)">
+                    🤒 Skin / Surface
+                </button>
+                <button class="region-btn" onclick="selectRegion('General', this)">
+                    🌡️ Common / General
+                </button>
+            </div>
+        </div>
+
+        <p id="selected-region" class="selection-display">Select a body part to start</p>
 
         <div class="button-group">
           <button class="btn-secondary" onclick="goToScreen(1)">← Back</button>
-          <button class="btn-primary" id="body-continue-btn" onclick="goToSymptoms()" disabled>
-            Continue to Symptoms →
+          
+          <button class="btn-secondary" id="add-symptoms-btn" onclick="goToSymptoms()" disabled>
+             Add/Edit Symptoms for Region
           </button>
-          <button id="diagnose-btn" class="action-btn">Get Diagnosis</button>
         </div>
+
+        <button id="diagnose-btn" class="btn-primary" onclick="triggerDiagnosis()">
+           ✅ Get Diagnosis (Done)
+        </button>
       </div>
 
-      <!-- Screen 3 -->
       <div id="screen-3" class="screen">
         <h2 id="region-title">Rate Your Symptoms</h2>
+        <p class="helper-text">Select severity for all that apply.</p>
+        
         <div id="symptom-container" class="symptom-grid"></div>
 
         <div class="button-group">
-          <button class="btn-secondary" onclick="goToScreen(2)">← Back</button>
-          <button class="btn-primary" onclick="saveSymptoms()">Save & Continue →</button>
+          <button class="btn-primary" onclick="saveRegionAndReturn()">Save & Select Another Region</button>
         </div>
       </div>
 
-      <!-- Screen 4 -->
       <div id="screen-4" class="screen">
         <h2>Your Results</h2>
 
         <div class="summary-box">
-          <p><strong>Age:</strong> <span id="sum-age"></span></p>
-          <p><strong>Sex:</strong> <span id="sum-gender"></span></p>
-          <p><strong>Severe:</strong> <span id="sum-severe"></span></p>
-          <p><strong>Region:</strong> <span id="sum-region"></span></p>
-          <p><strong>Symptoms:</strong> <span id="sum-symptoms"></span></p>
+            <div class="summary-item"><strong>Age:</strong> <span id="sum-age">-</span></div>
+            <div class="summary-item"><strong>Sex:</strong> <span id="sum-gender">-</span></div>
+            <div class="summary-item"><strong>Severe:</strong> <span id="sum-severe">-</span></div>
+            <div class="summary-item full-width"><strong>Total Regions:</strong> <span id="sum-regions-count">-</span></div>
         </div>
 
-        <div id="results-container"></div>
+        <div id="results-container" class="results-container"></div>
 
         <div class="disclaimer">
-          ⚠️ This tool is informational only. Always consult a medical professional.
+          ⚠️ <strong>Disclaimer:</strong> This tool is informational only. Always consult a medical professional.
         </div>
 
-        <button class="btn-primary" onclick="restart()">🔄 Start Over</button>
+        <button class="btn-outline" onclick="restart()">🔄 Start Over</button>
       </div>
     </main>
   </div>
 
-  <!-- JS (order matters) --><script src="scripts/state.js"></script>
-<script src="scripts/data.js"></script>
-<script src="scripts/ui.js"></script>
-<script src="scripts/symptoms.js"></script>
-<script src="scripts/api.js"></script>
-<script src="scripts/main.js"></script>
-
+  <script src="scripts/state.js"></script>
+  <script src="scripts/data.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/symptoms.js"></script>
+  <script src="scripts/api.js"></script>
+  <script src="scripts/main.js"></script>
 </body>
 </html>

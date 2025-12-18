@@ -2,16 +2,18 @@
 
 function goToScreen(n) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(`screen-${n}`).classList.add('active');
+  const target = document.getElementById(`screen-${n}`);
+  if(target) target.classList.add('active');
 
   const subtitles = {
     1: "Let's start with some basic questions",
     2: "Select where you feel symptoms",
-    3: "Tell us about your symptoms",
-    4: "Preliminary diagnostic insights"
+    3: "Rate your symptoms",
+    4: "Your Results"
   };
-
-  document.getElementById('header-subtitle').textContent = subtitles[n];
+  const sub = document.getElementById('header-subtitle');
+  if(sub) sub.textContent = subtitles[n] || "";
+  
   window.scrollTo(0, 0);
 }
 
@@ -23,11 +25,20 @@ function selectGender(gender) {
 
 function answerSevere(ans) {
   appState.severe = ans;
+
   document.querySelectorAll('.question-buttons button')
-    .forEach(b => b.classList.toggle('active', b.textContent === ans));
+    .forEach(b => {
+      if (
+        (ans === 'Yes' && b.textContent.includes('More')) ||
+        (ans === 'No' && b.textContent.includes('Less'))
+      ) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    });
 }
 
-// --- MISSING FUNCTIONS ADDED BELOW ---
 
 function goToBodyMap() {
   const age = document.getElementById("age").value;
@@ -42,24 +53,98 @@ function goToBodyMap() {
 function selectRegion(region, el) {
   appState.selectedRegion = region;
   
-  // Update visual selection
+  // 1. Clear previous selections on MAP regions
   document.querySelectorAll('.region').forEach(r => r.classList.remove('selected'));
+  // 2. Clear previous selections on EXTRA buttons
+  document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('selected'));
+  
+  // 3. Apply selection to clicked element
   if (el.classList.contains('region')) {
     el.classList.add('selected');
+  } else if (el.classList.contains('region-btn')) {
+    el.classList.add('selected');
   } else {
-    el.closest('.region').classList.add('selected');
+    // Check if clicked inner element of a region div
+    if(el.closest('.region')) el.closest('.region').classList.add('selected');
+    // Check if clicked inner element of a button
+    if(el.closest('.region-btn')) el.closest('.region-btn').classList.add('selected');
   }
 
-  document.getElementById('selected-region').textContent = "Selected: " + region;
-  document.getElementById('body-continue-btn').disabled = false;
+  // Update text
+  const disp = document.getElementById('selected-region');
+  if(disp) disp.textContent = "Selected: " + region;
+
+  // Update Buttons
+  const addBtn = document.getElementById('add-symptoms-btn');
+  if(addBtn) {
+      addBtn.disabled = false;
+      addBtn.textContent = `Add Symptoms for ${region} →`;
+      addBtn.classList.add('btn-primary'); 
+      addBtn.classList.remove('btn-secondary');
+  }
 }
 
 function goToSymptoms() {
-  // Render the specific symptoms for the chosen body part
-  renderSymptomChecklist(appState.selectedRegion);
+  if(!appState.selectedRegion) return;
+  if(typeof renderSymptomChecklist === 'function') {
+      renderSymptomChecklist(appState.selectedRegion);
+  }
   goToScreen(3);
 }
-function toggleButtonGroup(parent, clickedBtn) {
-  [...parent.children].forEach(btn => btn.classList.remove("active"));
-  clickedBtn.classList.add("active");
+
+function saveRegionAndReturn() {
+    goToScreen(2);
+    // Reset the "Add Symptoms" button style
+    const addBtn = document.getElementById('add-symptoms-btn');
+    if(addBtn) {
+        addBtn.classList.remove('btn-primary');
+        addBtn.classList.add('btn-secondary');
+        addBtn.textContent = "Add/Edit Symptoms for Region";
+    }
+}
+
+async function triggerDiagnosis() {
+    let hasSymptoms = false;
+    // Check if any symptoms exist in state
+    for(let reg in appState.symptomSeverities) {
+        for(let sym in appState.symptomSeverities[reg]) {
+            if(appState.symptomSeverities[reg][sym] > 0) hasSymptoms = true;
+        }
+    }
+
+    if(!hasSymptoms) {
+        alert("Please add at least one symptom before getting a diagnosis.");
+        return;
+    }
+
+    const btn = document.getElementById('diagnose-btn');
+    const oldText = btn.textContent;
+    btn.textContent = "Analyzing...";
+    btn.disabled = true;
+
+    try {
+        const predictions = await getDiagnosis(appState);
+        displayResults(predictions);
+        updateSummaryDisplay();
+        goToScreen(4);
+    } catch(e) {
+        console.error(e);
+        alert("Error fetching diagnosis. Check backend.");
+    } finally {
+        btn.textContent = oldText;
+        btn.disabled = false;
+    }
+}
+
+function updateSummaryDisplay() {
+    document.getElementById('sum-age').textContent = appState.age;
+    document.getElementById('sum-gender').textContent = appState.gender;
+    document.getElementById('sum-severe').textContent = appState.severe;
+    
+    const regionsCount = Object.keys(appState.symptomSeverities).length;
+    document.getElementById('sum-regions-count').textContent = regionsCount > 0 ? `${regionsCount} regions affected` : "None";
+}
+
+function restart() {
+  window.location.reload();
 }
