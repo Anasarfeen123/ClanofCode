@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Symptom Checker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <h1>Symptom Checker</h1>
+  <p>For informational purposes only</p>
+
+  <nav>
+    <span>Info</span>
+    <span>Symptoms</span>
+    <span>Conditions</span>
+  </nav>
+
+  <main>
+    <section>
+    <main>
+
+  <section class="step" id="step-1">
+    <h2>Basic Information</h2>
+    <input type="number" placeholder="Age">
+    <br><br>
+    <button>Male</button>
+    <button>Female</button>
+    <br><br>
+    <button onclick="nextStep()">Continue</button>
+  </section>
+
+  <section class="step" id="step-2">
+    <h2>What are your symptoms?</h2>
+    <input type="text" placeholder="Type your main symptom">
+    <br><br>
+    <button onclick="prevStep()">Back</button>
+    <button onclick="nextStep()">Continue</button>
+  </section>
+
+  <section class="step" id="step-3">
+    <h2>Possible Conditions</h2>
+    <p>Condition A — Strong match</p>
+    <p>Condition B — Moderate match</p>
+    <br>
+    <p>⚠️ This tool does not provide medical advice.</p>
+    <button onclick="resetSteps()">Start Over</button>
+  </section>
+
+</main>
+
+    </section>
+  </main>
+  <script src="script.js"></script>
+
+
+
+</body>
+</html>
