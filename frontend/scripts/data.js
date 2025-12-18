@@ -1,16 +1,39 @@
-const symptomMap = {
-  'Head': ['Headache', 'Dizziness', 'Vision problems', 'Nausea'],
-  'Head (Back)': ['Headache', 'Neck stiffness', 'Dizziness'],
-  'Chest': ['Chest pain', 'Tightness', 'Shortness of breath', 'Palpitations'],
-  'Abdomen': ['Stomach pain', 'Bloating', 'Nausea', 'Cramping'],
-  'Upper Back': ['Back pain', 'Stiffness', 'Muscle tension', 'Limited movement'],
-  'Lower Back': ['Lower back pain', 'Stiffness', 'Sciatica', 'Muscle spasms'],
-  'Left Arm': ['Arm pain', 'Numbness', 'Weakness', 'Limited movement'],
-  'Right Arm': ['Arm pain', 'Numbness', 'Weakness', 'Limited movement'],
-  'Left Arm (Back)': ['Arm pain', 'Stiffness', 'Muscle tension'],
-  'Right Arm (Back)': ['Arm pain', 'Stiffness', 'Muscle tension'],
-  'Left Leg': ['Leg pain', 'Numbness', 'Weakness', 'Swelling'],
-  'Right Leg': ['Leg pain', 'Numbness', 'Weakness', 'Swelling'],
-  'Left Leg (Back)': ['Leg pain', 'Stiffness', 'Cramping'],
-  'Right Leg (Back)': ['Leg pain', 'Stiffness', 'Cramping']
-};
+// scripts/data.js
+
+const DIAGNOSIS_RULES = [
+  {
+    region: "Head",
+    symptoms: ["Headache", "Dizziness"],
+    diagnosis: "Tension Headache",
+    severity: "low",
+    advice: "Rest, hydration, reduced screen exposure"
+  },
+  {
+    region: "Head",
+    symptoms: ["Headache", "Nausea"],
+    diagnosis: "Migraine",
+    severity: "moderate",
+    advice: "Dark room, pain relief, avoid triggers"
+  },
+  {
+    region: "Chest",
+    symptoms: ["Chest pain", "Shortness of breath"],
+    diagnosis: "Possible Cardiac Condition",
+    severity: "high",
+    advice: "Seek immediate medical attention"
+  },
+  {
+    region: "Abdomen",
+    symptoms: ["Stomach pain", "Bloating"],
+    diagnosis: "Gastritis",
+    severity: "low",
+    advice: "Avoid spicy food, small meals"
+  },
+  {
+    region: "Lower Back",
+    symptoms: ["Lower back pain", "Stiffness"],
+    diagnosis: "Muscle Strain",
+    severity: "low",
+    advice: "Rest, stretching, posture correction"
+  }
+];

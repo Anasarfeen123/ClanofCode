@@ -1,24 +1,38 @@
-async function callBackendAndRender() {
-  const payload = {
-    age: Number(appState.age),
-    sex: appState.gender.toLowerCase(),
-    type: appState.severe === "Yes" ? "acute" : "not_sure",
-    region: appState.selectedRegion,
-    symptoms: {}
-  };
+// scripts/api.js
 
-  Object.values(appState.symptomSeverities).forEach(region =>
-    Object.entries(region).forEach(([s, v]) =>
-      payload.symptoms[normalizeSymptom(s)] = v
-    )
-  );
+function getDiagnosis(appState) {
+  const region = appState.selectedRegion;
+  const symptomData = appState.symptomSeverities[region] || {};
+  const selectedSymptoms = Object.keys(symptomData);
 
-  const res = await fetch("http://127.0.0.1:8000/predict", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+  let results = [];
+
+  DIAGNOSIS_RULES.forEach(rule => {
+    if (rule.region !== region) return;
+
+    const matches = rule.symptoms.filter(s =>
+      selectedSymptoms.includes(s)
+    );
+
+    if (matches.length > 0) {
+      results.push({
+        diagnosis: rule.diagnosis,
+        severity: rule.severity,
+        advice: rule.advice,
+        score: matches.length
+      });
+    }
   });
 
-  const data = await res.json();
-  renderResults(data.predictions || []);
+  if (results.length === 0) {
+    results.push({
+      diagnosis: "Non-specific discomfort",
+      severity: "low",
+      advice: "Monitor symptoms and consult a doctor if persistent",
+      score: 1
+    });
+  }
+
+  results.sort((a, b) => b.score - a.score);
+  return results;
 }

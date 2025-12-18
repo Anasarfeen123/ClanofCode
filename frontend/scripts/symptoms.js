@@ -1,27 +1,24 @@
-function normalizeSymptom(symptom) {
-  return symptom.toLowerCase().replace(/\s+/g, '_').replace(/[()]/g, '');
-}
-
-function getRegionSymptoms(region) {
-  if (!appState.symptomSeverities[region]) {
-    appState.symptomSeverities[region] = {};
+function goToBodyMap() {
+  const age = document.getElementById('age').value;
+  if (!age || !appState.gender || !appState.severe) {
+    alert('Please complete all fields');
+    return;
   }
-  return appState.symptomSeverities[region];
+  appState.age = age;
+  goToScreen(2);
 }
 
 function selectRegion(region, el) {
   appState.selectedRegion = region;
-
-  document.querySelectorAll('.region').forEach(r =>
-    r.classList.remove('selected')
-  );
-
+  document.querySelectorAll('.region').forEach(r => r.classList.remove('selected'));
   el.classList.add('selected');
-
-  document.getElementById('selected-region').textContent =
-    'Selected: ' + region;
-
+  document.getElementById('selected-region').textContent = `✓ Selected: ${region}`;
   document.getElementById('body-continue-btn').disabled = false;
+}
+
+function goToSymptoms() {
+  renderSymptoms();
+  goToScreen(3);
 }
 
 function renderSymptoms() {
@@ -30,49 +27,51 @@ function renderSymptoms() {
 
   const region = appState.selectedRegion;
   const symptoms = symptomMap[region] || [];
-  const saved = getRegionSymptoms(region);
-  const labels = ['None', 'Low', 'Moderate', 'High', 'Unbearable'];
+  const saved = appState.symptomSeverities[region] || {};
 
   symptoms.forEach(symptom => {
-    const div = document.createElement('div');
-    div.className = 'symptom-item';
+    const item = document.createElement('div');
+    item.className = 'symptom-item';
 
-    const title = document.createElement('div');
-    title.className = 'symptom-name';
-    title.textContent = symptom;
+    const name = document.createElement('div');
+    name.className = 'symptom-name';
+    name.textContent = symptom;
 
     const scale = document.createElement('div');
     scale.className = 'severity-scale';
 
-    labels.forEach((label, level) => {
+    severityLabels.forEach((label, level) => {
       const opt = document.createElement('div');
       opt.className = 'severity-option';
-      opt.onclick = () => selectSeverity(symptom, level, div);
+      opt.innerHTML = `<span class="severity-label">${label}</span>`;
 
       if (saved[symptom] === level) {
         opt.classList.add('selected');
-        div.classList.add('has-severity');
+        item.classList.add('has-severity');
       }
 
-      opt.innerHTML = `<span class="severity-label">${label}</span>`;
+      opt.onclick = () => selectSeverity(symptom, level, item);
       scale.appendChild(opt);
     });
 
-    div.appendChild(title);
-    div.appendChild(scale);
-    container.appendChild(div);
+    item.append(name, scale);
+    container.appendChild(item);
   });
 }
 
-function selectSeverity(symptom, level, itemDiv) {
-  const regionSymptoms = getRegionSymptoms(appState.selectedRegion);
+function selectSeverity(symptom, level, item) {
+  const region = appState.selectedRegion;
+  appState.symptomSeverities[region] ??= {};
+
+  item.querySelectorAll('.severity-option').forEach(o => o.classList.remove('selected'));
 
   if (level === 0) {
-    delete regionSymptoms[symptom];
-    itemDiv.classList.remove('has-severity');
+    delete appState.symptomSeverities[region][symptom];
+    item.classList.remove('has-severity');
   } else {
-    regionSymptoms[symptom] = level;
-    itemDiv.classList.add('has-severity');
+    appState.symptomSeverities[region][symptom] = level;
+    item.querySelectorAll('.severity-option')[level].classList.add('selected');
+    item.classList.add('has-severity');
   }
 }
 

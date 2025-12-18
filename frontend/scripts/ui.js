@@ -1,9 +1,6 @@
-function goToScreen(screenNum) {
-  document.querySelectorAll('.screen').forEach(s =>
-    s.classList.remove('active')
-  );
-
-  document.getElementById(`screen-${screenNum}`).classList.add('active');
+function goToScreen(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${n}`).classList.add('active');
 
   const subtitles = {
     1: "Let's start with some basic questions",
@@ -12,22 +9,18 @@ function goToScreen(screenNum) {
     4: "Preliminary diagnostic insights"
   };
 
-  document.getElementById('header-subtitle').textContent =
-    subtitles[screenNum];
-
+  document.getElementById('header-subtitle').textContent = subtitles[n];
   window.scrollTo(0, 0);
 }
 
 function selectGender(gender) {
   appState.gender = gender;
-  document.querySelectorAll('.gender-buttons button').forEach(btn =>
-    btn.classList.toggle('active', btn.textContent === gender)
-  );
+  document.querySelectorAll('.gender-buttons button')
+    .forEach(b => b.classList.toggle('active', b.textContent === gender));
 }
 
-function answerSevere(answer) {
-  appState.severe = answer;
-  document.querySelectorAll('.question-buttons button').forEach(btn =>
-    btn.classList.toggle('active', btn.textContent === answer)
-  );
+function answerSevere(ans) {
+  appState.severe = ans;
+  document.querySelectorAll('.question-buttons button')
+    .forEach(b => b.classList.toggle('active', b.textContent === ans));
 }

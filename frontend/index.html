@@ -4,28 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Symptom Checker</title>
-
   <link rel="stylesheet" href="styles/main.css" />
 </head>
+
 <body>
   <div class="container">
     <header>
-      <h1>Symptom Checker</h1>
+      <h1>🏥 Symptom Checker</h1>
       <p id="header-subtitle">Let's start with some basic questions</p>
     </header>
 
     <main>
-      <!-- Screen 1: Basic Info -->
+      <!-- Screen 1 -->
       <div id="screen-1" class="screen active">
         <h2>Basic Information</h2>
+
         <label>Age</label>
         <input type="number" id="age" placeholder="Enter your age" min="1" max="120">
+
         <label>Sex</label>
         <div class="gender-buttons">
           <button onclick="selectGender('Male')">Male</button>
           <button onclick="selectGender('Female')">Female</button>
           <button onclick="selectGender('Other')">Other</button>
         </div>
+
         <div class="question">
           <p>Are your symptoms severe or sudden?</p>
           <div class="question-buttons">
@@ -33,15 +36,17 @@
             <button onclick="answerSevere('No')">No</button>
           </div>
         </div>
-        <button class="btn-primary" onclick="goToBodyMap()">Continue to Body Map</button>
+
+        <button class="btn-primary" onclick="goToBodyMap()">Continue to Body Map →</button>
       </div>
 
-      <!-- Screen 2: Body Map -->
+      <!-- Screen 2 -->
       <div id="screen-2" class="screen">
         <h2>Select where you feel symptoms</h2>
+
         <div class="body-map-wrapper">
           <div class="body-map">
-            <h3>Front</h3>
+            <h3>Front View</h3>
             <div class="body-map-container">
               <img src="assets/front.png" alt="Front body diagram">
               <div class="region head" onclick="selectRegion('Head',this)"><span class="region-label">Head</span></div>
@@ -53,8 +58,9 @@
               <div class="region right-leg" onclick="selectRegion('Right Leg',this)"><span class="region-label">Right Leg</span></div>
             </div>
           </div>
+
           <div class="body-map">
-            <h3>Back</h3>
+            <h3>Back View</h3>
             <div class="body-map-container">
               <img src="assets/back.png" alt="Back body diagram">
               <div class="region back-head" onclick="selectRegion('Head (Back)',this)"><span class="region-label">Head</span></div>
@@ -67,53 +73,52 @@
             </div>
           </div>
         </div>
-        <p id="selected-region"></p>
-        <div class="button-group">
-          <button class="btn-secondary" onclick="goToScreen(1)">Back</button>
-          <button class="btn-primary" onclick="goToSymptoms()" id="body-continue-btn" disabled>Continue to Symptoms</button>
-          <button class="btn-primary" onclick="goToDiagnostics()">
-            Get Diagnosis
-          </button>
 
+        <p id="selected-region"></p>
+
+        <div class="button-group">
+          <button class="btn-secondary" onclick="goToScreen(1)">← Back</button>
+          <button class="btn-primary" id="body-continue-btn" onclick="goToSymptoms()" disabled>
+            Continue to Symptoms →
+          </button>
         </div>
       </div>
 
-      <!-- Screen 3: Symptoms -->
+      <!-- Screen 3 -->
       <div id="screen-3" class="screen">
         <h2 id="region-title">Rate Your Symptoms</h2>
         <div id="symptom-container" class="symptom-grid"></div>
-        <div class="button-group">
-          <button class="btn-secondary" onclick="goToScreen(2)">Back</button>
-          <button class="btn-primary" onclick="saveSymptoms()">Add Symptoms</button>
 
-          <!-- <button class="btn-primary" onclick="goToDiagnostics()" id="symptom-continue-btn" disabled>Get Diagnosis</button> -->
+        <div class="button-group">
+          <button class="btn-secondary" onclick="goToScreen(2)">← Back</button>
+          <button class="btn-primary" onclick="saveSymptoms()">Save & Continue →</button>
         </div>
       </div>
 
-      <!-- Screen 4: Results -->
+      <!-- Screen 4 -->
       <div id="screen-4" class="screen">
         <h2>Your Results</h2>
+
         <div class="summary-box">
-          <p><strong>Age:</strong> <span id="sum-age">-</span></p>
-          <p><strong>Sex:</strong> <span id="sum-gender">-</span></p>
-          <p><strong>Severe/Sudden:</strong> <span id="sum-severe">-</span></p>
-          <p><strong>Selected Area:</strong> <span id="sum-region">-</span></p>
-          <p><strong>Symptoms:</strong> <span id="sum-symptoms">-</span></p>
+          <p><strong>Age:</strong> <span id="sum-age"></span></p>
+          <p><strong>Sex:</strong> <span id="sum-gender"></span></p>
+          <p><strong>Severe:</strong> <span id="sum-severe"></span></p>
+          <p><strong>Region:</strong> <span id="sum-region"></span></p>
+          <p><strong>Symptoms:</strong> <span id="sum-symptoms"></span></p>
         </div>
-        <div id="loading-indicator" class="loading" style="display: none;">
-          <div class="spinner"></div>
-          <p>Analyzing your symptoms...</p>
-        </div>
-        <div id="error-container"></div>
-        <h3 id="results-title" style="display: none;">Possible Conditions</h3>
+
         <div id="results-container"></div>
+
         <div class="disclaimer">
-          ⚠️ <strong>Important:</strong> This tool does not provide medical advice and is for informational purposes only. Always consult a qualified healthcare professional for proper diagnosis and treatment.
+          ⚠️ This tool is informational only. Always consult a medical professional.
         </div>
-        <button class="btn-primary" onclick="restart()">Start Over</button>
+
+        <button class="btn-primary" onclick="restart()">🔄 Start Over</button>
       </div>
     </main>
-  </div>  <!-- JS (order matters) -->
+  </div>
+
+  <!-- JS (order matters) -->
   <script src="scripts/state.js"></script>
   <script src="scripts/data.js"></script>
   <script src="scripts/ui.js"></script>
