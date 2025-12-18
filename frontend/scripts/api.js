@@ -72,7 +72,3 @@ async function getDiagnosis(appState) {
     }];
   }
 }
-}function normalizeRegion(region) {
-  return region.replace(" (Back)", "");
-}
-const region = normalizeRegion(appState.selectedRegion);
