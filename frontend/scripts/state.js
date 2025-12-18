@@ -1,7 +1,9 @@
+// scripts/state.js
+
 const appState = {
   age: null,
   gender: null,
   severe: null,
   selectedRegion: null,
-  symptomSeverities: {}
+  symptomSeverities: {}   // region → { symptom: severity }
 };

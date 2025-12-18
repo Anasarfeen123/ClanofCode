@@ -1,12 +1,16 @@
+type: uploaded file
+fileName: ClanofCode/frontend/scripts/main.js
+fullContent:
 function saveSymptoms() {
+  const region = appState.selectedRegion;
+  const symptoms = appState.symptomSeverities[region] || {};
+
+  console.log("DEBUG STATE:", appState); // 👈 keep this once
+
   document.getElementById("sum-age").textContent = appState.age;
   document.getElementById("sum-gender").textContent = appState.gender;
   document.getElementById("sum-severe").textContent = appState.severe;
-  document.getElementById("sum-region").textContent = appState.selectedRegion;
-
-  const symptoms =
-    appState.symptomSeverities[appState.selectedRegion] || {};
-
+  document.getElementById("sum-region").textContent = region;
   document.getElementById("sum-symptoms").textContent =
     Object.keys(symptoms).join(", ") || "None";
 
@@ -15,6 +19,7 @@ function saveSymptoms() {
 
   goToScreen(4);
 }
+
 function renderDiagnosis(results) {
   const container = document.getElementById("results-container");
   container.innerHTML = "";
