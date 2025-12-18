@@ -54,21 +54,5 @@ async function getDiagnosis(appState) {
         advice: "Your symptoms do not match our database clearly. Please consult a general physician."
       }];
     }
-
-    return data.predictions.map(p => ({
-      diagnosis: p.disease,
-      // Heuristic for severity based on model confidence and disease type
-      severity: (p.prob > 0.6 || p.model === "acute") ? "high" : "moderate", 
-      advice: getAdvice(p.disease),
-      score: Math.round(p.prob * 100)
-    }));
-
-  } catch (error) {
-    console.error("API Error:", error);
-    return [{
-      diagnosis: "Connection Error",
-      severity: "low",
-      advice: "Could not connect to the AI server. Is the backend running?"
-    }];
   }
 }
