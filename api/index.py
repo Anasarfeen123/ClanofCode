@@ -7,13 +7,20 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # 1. Add root_path="/api"
 app = FastAPI(title="Symptom Disease Predictor", root_path="/api")
+# --- 2. ADD THIS BLOCK ---
+origins = [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=origins,      # Allows the frontend to connect
+    allow_credentials=True,
+    allow_methods=["*"],        # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"],        # Allows all headers
 )
+# -------------------------
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, "model")

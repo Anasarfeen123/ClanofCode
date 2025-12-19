@@ -36,7 +36,6 @@
   box-sizing: border-box;
 }
 
-/* HARD RESET FOR BUTTONS */
 button {
   appearance: none;
   -webkit-appearance: none;
@@ -89,7 +88,6 @@ header {
 header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
 header p { opacity: 0.9; }
 
-/* Translate Widget Styling */
 .translate-wrapper {
   position: absolute;
   top: 20px;
@@ -118,7 +116,6 @@ main { padding: 40px 24px; width: 100%; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Inputs */
 input[type="number"] {
   width: 100%;
   padding: 14px 16px;
@@ -133,7 +130,6 @@ input[type="number"]:focus {
   box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
-/* Gender & Question Buttons (Screen 1) */
 .gender-buttons, .question-buttons {
   display: flex;
   gap: 12px;
@@ -159,12 +155,14 @@ input[type="number"]:focus {
   color: var(--primary);
 }
 
-/* Active state for simple buttons (needs JS to toggle class usually, 
-   but hover effect helps indication) */
-.gender-buttons button:active,
-.question-buttons button:active {
-  background: var(--primary-soft);
-  transform: scale(0.98);
+.gender-buttons button.active, 
+.question-buttons button.active {
+  background-color: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-hover);
+  box-shadow: 0 4px 12px var(--primary-glow);
+  font-weight: 700;
+  transform: translateY(-1px);
 }
 
 /* =====================================================
@@ -191,7 +189,7 @@ input[type="number"]:focus {
 .body-map-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 2; /* Keeps the rectangle shape */
+  aspect-ratio: 1 / 2;
   background: #fff;
   border-radius: 24px;
   box-shadow: var(--shadow-md);
@@ -213,7 +211,7 @@ input[type="number"]:focus {
 }
 
 /* =====================================================
-   REGIONS (Front & Back)
+   REGIONS - BASE STYLES
 ===================================================== */
 .region {
   position: absolute;
@@ -223,64 +221,150 @@ input[type="number"]:focus {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Highlight Effect */
+/* Visual Overlay (Glow/Highlight) */
 .region::after {
   content: '';
   position: absolute;
-  inset: -5px;
+  inset: 0;
   border-radius: inherit;
-  background: rgba(13, 148, 136, 0.4); /* Primary color semi-transparent */
+  background: rgba(13, 148, 136, 0);
+  box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
   opacity: 0;
-  transition: opacity 0.2s;
-}
-.region:hover::after, .region.selected::after { opacity: 1; }
-
-/* --- Front View Coordinates --- */
-.region.head { top:3%; left:33%; width:34%; height:13%; }
-.region.chest { top:18%; left:25%; width:50%; height:15%; border-radius: 15px; }
-.region.abdomen { top:35%; left:28%; width:44%; height:14%; border-radius: 15px; }
-.region.left-arm { top:20%; left:2%; width:20%; height:30%; transform: rotate(25deg); border-radius: 30px; }
-.region.right-arm { top:20%; right:2%; width:20%; height:30%; transform: rotate(-25deg); border-radius: 30px; }
-.region.left-leg { top:52%; left:24%; width:20%; height:38%; border-radius: 30px; }
-.region.right-leg { top:52%; right:24%; width:20%; height:38%; border-radius: 30px; }
-
-/* --- Back View Coordinates (NEW) --- */
-.region.back-head { top:3%; left:33%; width:34%; height:13%; }
-.region.upper-back { top:18%; left:25%; width:50%; height:18%; border-radius: 15px; }
-.region.lower-back { top:38%; left:28%; width:44%; height:12%; border-radius: 15px; }
-.region.back-left-arm { top:20%; left:2%; width:20%; height:30%; transform: rotate(25deg); border-radius: 30px; }
-.region.back-right-arm { top:20%; right:2%; width:20%; height:30%; transform: rotate(-25deg); border-radius: 30px; }
-.region.back-left-leg { top:52%; left:24%; width:20%; height:38%; border-radius: 30px; }
-.region.back-right-leg { top:52%; right:24%; width:20%; height:38%; border-radius: 30px; }
-
-
-/* Region Labels */
-.region-label {
-  position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -150%) scale(0.9);
-  background: rgba(15,23,42,0.95);
-  color: white;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 700;
-  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   pointer-events: none;
-  transition: 0.2s;
-  white-space: nowrap;
-  z-index: 20;
-}
-.region:hover .region-label, .region.selected .region-label {
-  opacity: 1; transform: translate(-50%, -180%) scale(1);
 }
 
-.region-dot { display: none; } /* Hide dots if you want clean click zones */
+/* Hover State */
+.region:hover::after {
+  opacity: 1;
+  background: rgba(13, 148, 136, 0.15);
+  inset: -4px;
+}
+
+/* Selected State (The 8% Opacity + Organic Glow) */
+.region.selected::after {
+  opacity: 1;
+  background: rgba(13, 148, 136, 0.08); /* 8% Opacity */
+  filter: drop-shadow(0 0 2px rgba(13, 148, 136, 0.8)) 
+          drop-shadow(0 0 8px rgba(13, 148, 136, 0.4));
+  inset: 0; 
+  animation: selectedPulse 3s infinite ease-in-out;
+}
+
+@keyframes selectedPulse {
+  0% { 
+    filter: drop-shadow(0 0 2px rgba(13, 148, 136, 0.8)) drop-shadow(0 0 8px rgba(13, 148, 136, 0.4)); 
+    background: rgba(13, 148, 136, 0.08);
+  }
+  50% { 
+    filter: drop-shadow(0 0 4px rgba(13, 148, 136, 0.9)) drop-shadow(0 0 12px rgba(13, 148, 136, 0.6)); 
+    background: rgba(13, 148, 136, 0.15); 
+  }
+  100% { 
+    filter: drop-shadow(0 0 2px rgba(13, 148, 136, 0.8)) drop-shadow(0 0 8px rgba(13, 148, 136, 0.4)); 
+    background: rgba(13, 148, 136, 0.08);
+  }
+}
+
+/* =====================================================
+   REGIONS - SHAPES & COORDINATES
+   (Rounded Taper Logic for Arms/Legs)
+===================================================== */
+
+/* --- Front View --- */
+.region.head {
+  top: 6.5%; left: 42%; width: 16%; height: 10%;
+  border-radius: 50% 50% 60% 60% / 60% 60% 40% 40%;
+}
+
+.region.chest {
+  top: 18%; left: 33%; width: 34%; height: 17%;
+  border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
+}
+
+.region.abdomen {
+  top: 34%; left: 35%; width: 30%; height: 14%;
+  border-radius: 40% 40% 50% 50% / 40% 40% 60% 60%;
+}
+
+.region.left-arm {
+  top: 19%; left: 17%; width: 14%; height: 30%;
+  transform: rotate(24deg); 
+  /* Rounded Taper: Wide shoulder, narrow wrist */
+  border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%;
+  clip-path: none;
+}
+
+.region.right-arm {
+  top: 19%; right: 17%; width: 14%; height: 30%;
+  transform: rotate(-24deg);
+  border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%;
+  clip-path: none;
+}
+
+.region.left-leg {
+  top: 46%; left: 28%; width: 13.5%; height: 48%;
+  transform: rotate(8deg);
+  /* Rounded Taper: Wide thigh, narrow ankle */
+  border-radius: 40% 60% 50% 50% / 35% 35% 65% 65%;
+  clip-path: none;
+}
+
+.region.right-leg {
+  top: 46%; right: 28%; width: 13.5%; height: 48%;
+  transform: rotate(-8deg);
+  border-radius: 60% 40% 50% 50% / 35% 35% 65% 65%;
+  clip-path: none;
+}
+
+/* --- Back View (Matched Symmetry) --- */
+.region.back-head {
+  top: 6.5%; left: 42%; width: 16%; height: 10%;
+  border-radius: 50%;
+}
+
+.region.upper-back {
+  top: 18%; left: 32%; width: 36%; height: 19%;
+  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+}
+
+.region.lower-back {
+  top: 38%; left: 35%; width: 30%; height: 13%;
+  border-radius: 40% 40% 50% 50% / 30% 30% 60% 60%;
+}
+
+.region.back-left-arm {
+  top: 19%; left: 17%; width: 14%; height: 30%;
+  transform: rotate(24deg);
+  border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%;
+  clip-path: none;
+}
+
+.region.back-right-arm {
+  top: 19%; right: 17%; width: 14%; height: 30%;
+  transform: rotate(-24deg);
+  border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%;
+  clip-path: none;
+}
+
+.region.back-left-leg {
+  top: 46%; left: 28%; width: 13.5%; height: 48%;
+  transform: rotate(8deg);
+  border-radius: 40% 60% 50% 50% / 35% 35% 65% 65%;
+  clip-path: none;
+}
+
+.region.back-right-leg {
+  top: 46%; right: 28%; width: 13.5%; height: 48%;
+  transform: rotate(-8deg);
+  border-radius: 60% 40% 50% 50% / 35% 35% 65% 65%;
+  clip-path: none;
+}
+
 
 /* =====================================================
    BUTTONS (Screen 2 List & Actions)
 ===================================================== */
-/* Extra Regions Grid */
 .extra-regions-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -309,7 +393,6 @@ input[type="number"]:focus {
   color: var(--primary-hover);
 }
 
-/* Primary Action Buttons */
 .btn-primary {
   display: block;
   width: 100%;
@@ -387,21 +470,17 @@ input[type="number"]:focus {
     font-weight: 600;
 }
 .btn-outline:hover { border-color: var(--text-muted); color: var(--text-main); }
-/* =====================================================
-   SCREEN 3: SYMPTOM LIST (Matches symptoms.js)
-===================================================== */
 
-/* 1. The Container (defined in HTML id="symptom-container") */
-/* 1. The Container (defined in HTML id="symptom-container") */
+/* =====================================================
+   SCREEN 3: SYMPTOM LIST
+===================================================== */
 .symptom-grid {
   display: grid;
-  /* CHANGED: This forces a single column layout */
   grid-template-columns: 1fr; 
   gap: 16px;
   width: 100%;
 }
 
-/* 2. The Card Wrapper (JS: div.className = "symptom-item") */
 .symptom-item {
   background: #fff;
   border: 2px solid var(--border-light);
@@ -413,30 +492,26 @@ input[type="number"]:focus {
   transition: border-color 0.2s ease;
 }
 
-/* Highlight card when a selection is made */
 .symptom-item.has-severity {
   border-color: var(--primary);
   background: var(--primary-soft);
 }
 
-/* 3. The Symptom Name (JS: span.className = "symptom-name") */
 .symptom-name {
   font-size: 15px;
   font-weight: 700;
   color: var(--text-main);
 }
 
-/* 4. The Scale Container (JS: div.className = "severity-scale") */
 .severity-scale {
   display: flex;
   gap: 6px;
   width: 100%;
 }
 
-/* 5. The Buttons (JS: button.className = "severity-option") */
 .severity-option {
-  flex: 1; /* Makes them equal width */
-  padding: 8px 2px; /* Vertical padding */
+  flex: 1;
+  padding: 8px 2px;
   border-radius: 8px;
   background: #fff;
   border: 1px solid var(--border-light);
@@ -448,278 +523,37 @@ input[type="number"]:focus {
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-/* Hover State */
 .severity-option:hover {
   transform: translateY(-1px);
   background: #f8fafc;
   border-color: #cbd5e1;
 }
 
-/* =====================================================
-   COLOR MAPPING (Based on data-sev="0" to "4")
-===================================================== */
+/* Severity Colors */
+.severity-option[data-sev="0"].selected { background: #64748b; color: white; border-color: #64748b; }
+.severity-option[data-sev="1"].selected { background: var(--sev-0); color: white; border-color: var(--sev-0); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
+.severity-option[data-sev="2"].selected { background: var(--sev-1); color: white; border-color: var(--sev-1); box-shadow: 0 4px 12px rgba(132, 204, 22, 0.25); }
+.severity-option[data-sev="3"].selected { background: var(--sev-3); color: white; border-color: var(--sev-3); box-shadow: 0 4px 12px rgba(251, 146, 60, 0.25); }
+.severity-option[data-sev="4"].selected { background: var(--sev-4); color: white; border-color: var(--sev-4); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); }
 
-/* 0: None (Grey) */
-.severity-option[data-sev="0"].selected {
-  background: #64748b;
+/* Region Labels */
+.region-label {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -150%) scale(0.9);
+  background: rgba(15,23,42,0.95);
   color: white;
-  border-color: #64748b;
-}
-
-/* 1: Mild (Green) */
-.severity-option[data-sev="1"].selected {
-  background: var(--sev-0);
-  color: white;
-  border-color: var(--sev-0);
-  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
-}
-
-/* 2: Moderate (Lime/Yellow) */
-.severity-option[data-sev="2"].selected {
-  background: var(--sev-1);
-  color: white;
-  border-color: var(--sev-1);
-  box-shadow: 0 4px 12px rgba(132, 204, 22, 0.25);
-}
-
-/* 3: Severe (Orange) */
-.severity-option[data-sev="3"].selected {
-  background: var(--sev-3);
-  color: white;
-  border-color: var(--sev-3);
-  box-shadow: 0 4px 12px rgba(251, 146, 60, 0.25);
-}
-
-/* 4: Unbearable (Red) */
-.severity-option[data-sev="4"].selected {
-  background: var(--sev-4);
-  color: white;
-  border-color: var(--sev-4);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
-}
-/* =====================================================
-   FIX: SELECTION STATES FOR SCREEN 1
-   (Gender & Duration Buttons)
-===================================================== */
-
-/* 1. Base style for these buttons (ensure transition exists) */
-.gender-buttons button, 
-.question-buttons button {
-  transition: all 0.2s ease;
-  /* existing styles... */
-}
-
-/* 2. The Active/Selected State */
-.gender-buttons button.active, 
-.question-buttons button.active {
-  background-color: var(--primary-soft);
-  border-color: var(--primary);
-  color: var(--primary-hover);
-  box-shadow: 0 4px 12px var(--primary-glow);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
   font-weight: 700;
-  transform: translateY(-1px);
-}
-
-/* 3. Ensure the 'Add Symptoms' button transitions smoothly 
-      when JS switches it from btn-secondary to btn-primary */
-#add-symptoms-btn {
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* =====================================================
-   REGIONS (Front & Back) - IMPROVED SELECTION VISUALS
-===================================================== */
-.region {
-  position: absolute;
-  cursor: pointer;
-  z-index: 10;
-  border-radius: 50%; /* Default radius, overridden by specifics below */
-  -webkit-tap-highlight-color: transparent;
-  /* Ensure the highlight doesn't spill out awkwardly during animation */
-}
-
-/* The visual overlay element */
-.region::after {
-  content: '';
-  position: absolute;
-  /* Start matching the size exactly */
-  inset: 0;
-  border-radius: inherit;
-  /* Initial state: Transparent background, no shadow, invisible */
-  background: rgba(13, 148, 136, 0);
-  box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
   opacity: 0;
-  /* Smooth transition for hover in/out */
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  pointer-events: none; /* Important: lets clicks pass through to the JS */
+  pointer-events: none;
+  transition: 0.2s;
+  white-space: nowrap;
+  z-index: 20;
 }
-
-/* --- HOVER STATE (Subtle) --- */
-/* Just a light fill, slightly expanded */
-.region:hover::after {
-  opacity: 1;
-  background: rgba(13, 148, 136, 0.15); /* Very light primary fill */
-  inset: -4px; /* Slight expansion */
+.region:hover .region-label, .region.selected .region-label {
+  opacity: 1; transform: translate(-50%, -180%) scale(1);
 }
-
-/* --- SELECTED STATE (Distinct & Animated) --- */
-.region.selected::after {
-  opacity: 1;
-  /* 1. Stronger fill color */
-  background: rgba(13, 148, 136, 0.3);
-
-  /* 2. The "Glow" Border effect using multiple box-shadows */
-  /* Shadow 1: A thin, solid inner ring for definition */
-  /* Shadow 2: A wider, softer outer glow */
-  box-shadow:
-    0 0 0 2px rgba(13, 148, 136, 1),
-    0 0 15px rgba(13, 148, 136, 0.7);
-
-  /* Expand slightly more than hover */
-  inset: -5px;
-
-  /* 3. Attach the pulse animation */
-  animation: selectedPulse 2.5s infinite ease-in-out;
-}
-
-/* --- The Pulse Animation Keyframes --- */
-@keyframes selectedPulse {
-  0% {
-    /* Start: normal defined border, normal glow */
-    box-shadow: 0 0 0 2px rgba(13, 148, 136, 1), 0 0 15px rgba(13, 148, 136, 0.7);
-  }
-  50% {
-    /* Middle: Thicker, slightly more transparent border, wider glow */
-    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.6), 0 0 22px rgba(13, 148, 136, 0.9);
-  }
-  100% {
-    /* End: return to start */
-    box-shadow: 0 0 0 2px rgba(13, 148, 136, 1), 0 0 15px rgba(13, 148, 136, 0.7);
-  }
-}/* =====================================================
-   COORDINATES & SHAPES (Polished & Symmetrical)
-===================================================== */
-
-/* --- Front View --- */
-.region.head {
-  top: 6.5%; 
-  left: 42%; 
-  width: 16%; 
-  height: 10%;
-  border-radius: 50% 50% 60% 60% / 60% 60% 40% 40%;
-}
-
-.region.chest {
-  top: 18%; 
-  left: 33%; 
-  width: 34%; 
-  height: 17%;
-  border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
-}
-
-.region.abdomen {
-  top: 34%; /* Adjusted to sit just below chest */
-  left: 35%; 
-  width: 30%; 
-  height: 14%;
-  border-radius: 40% 40% 50% 50% / 40% 40% 60% 60%;
-}
-
-.region.left-arm {
-  top: 19%; 
-  left: 17%; 
-  width: 14%; 
-  height: 30%;
-  transform: rotate(24deg); 
-  border-radius: 100px; 
-}
-
-.region.right-arm {
-  top: 19%; 
-  right: 17%; 
-  width: 14%; 
-  height: 30%;
-  transform: rotate(-24deg);
-  border-radius: 100px;
-}
-
-.region.left-leg {
-  top: 46%; 
-  left: 28%; 
-  width: 13%; 
-  height: 48%; /* Long leg style */
-  transform: rotate(8deg);
-  border-radius: 30px; 
-}
-
-.region.right-leg {
-  top: 46%; 
-  right: 28%; 
-  width: 13%; 
-  height: 48%; /* Long leg style */
-  transform: rotate(-8deg);
-  border-radius: 30px; 
-}
-
-/* --- Back View --- */
-/* NOW MATCHES FRONT VIEW SYMMETRY */
-
-.region.back-head {
-  top: 6.5%; 
-  left: 42%; 
-  width: 16%; 
-  height: 10%;
-  border-radius: 50%;
-}
-
-.region.upper-back {
-  top: 18%; 
-  left: 32%; 
-  width: 36%; 
-  height: 19%;
-  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
-}
-
-.region.lower-back {
-  top: 38%; 
-  left: 35%; 
-  width: 30%; 
-  height: 13%;
-  border-radius: 40% 40% 50% 50% / 30% 30% 60% 60%;
-}
-
-.region.back-left-arm {
-  top: 19%; 
-  left: 17%; /* Fixed: Matches Front Left Arm */
-  width: 14%; /* Fixed: Was 10%, now 14% to match right */
-  height: 30%;
-  transform: rotate(24deg);
-  border-radius: 100px;
-}
-
-.region.back-right-arm {
-  top: 19%; 
-  right: 17%; 
-  width: 14%; 
-  height: 30%;
-  transform: rotate(-24deg);
-  border-radius: 100px;
-}
-
-.region.back-left-leg {
-  top: 46%; /* Fixed: Moved up to match Front Leg */
-  left: 28%; 
-  width: 13%; 
-  height: 48%;
-  transform: rotate(8deg);
-  border-radius: 30px;
-}
-
-.region.back-right-leg {
-  top: 46%; /* Fixed: Moved up to match Front Leg */
-  right: 28%; 
-  width: 13%; 
-  height: 48%;
-  transform: rotate(-8deg);
-  border-radius: 30px;
-}
+.region-dot { display: none; }
