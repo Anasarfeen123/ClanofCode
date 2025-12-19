@@ -1,6 +1,3 @@
-/* ======================================================
-   🌊 GLOBAL DESIGN TOKENS
-====================================================== */
 :root {
   /* Severity scale */
   --sev-0: #16a34a;
@@ -17,38 +14,40 @@
 
   /* Surfaces */
   --bg-main: linear-gradient(180deg, #f0fdfa, #f1f5f9);
-  --card-bg: rgba(255,255,255,0.88);
-  --glass: rgba(255,255,255,0.65);
+  --card-bg: rgba(255,255,255,0.95);
 
   /* Text */
   --text-main: #0f172a;
   --text-muted: #64748b;
 
-  /* Borders */
-  --border-light: rgba(15,23,42,0.08);
-
-  /* Shadows */
+  /* Borders & shadows */
+  --border-light: rgba(15,23,42,0.12);
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
   --shadow-sm: 0 6px 14px rgba(0,0,0,0.08);
   --shadow-md: 0 18px 40px rgba(0,0,0,0.12);
 }
 
-/* ======================================================
-   RESET
-====================================================== */
-*,
-*::before,
-*::after {
+/* =====================================================
+   RESET & DEFAULTS
+===================================================== */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ======================================================
-   BASE
-====================================================== */
+/* HARD RESET FOR BUTTONS */
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--bg-main);
   color: var(--text-main);
   min-height: 100vh;
@@ -56,461 +55,671 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ======================================================
-   APP CONTAINER
-====================================================== */
+/* =====================================================
+   CONTAINER & HEADER
+===================================================== */
 .container {
   width: 100%;
   max-width: 1100px;
   background: var(--card-bg);
   backdrop-filter: blur(14px);
-  border-radius: 24px;
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 28px;
   box-shadow: var(--shadow-md);
   overflow: hidden;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.5s ease-out;
 }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* ======================================================
-   HEADER
-====================================================== */
 header {
-  position: relative;
-  padding: 40px;
-  background:
-    radial-gradient(1200px 300px at top right, rgba(255,255,255,0.18), transparent),
-    linear-gradient(135deg, var(--primary), var(--primary-hover));
+  padding: 32px 24px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
   color: #fff;
+  text-align: center;
+  position: relative;
 }
 
-header h1 {
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-}
+header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+header p { opacity: 0.9; }
 
-header p {
-  font-size: 16px;
-  opacity: 0.9;
-}
-
-/* ======================================================
-   MAIN / SCREENS
-====================================================== */
-main {
-  max-width: 840px;
-  margin: 0 auto;
-  padding: 48px 40px;
+/* Translate Widget Styling */
+.translate-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
 }
+.translate-label { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
 
-.screen {
-  display: none;
-  width: 100%;
-  animation: slideUp 0.35s ease;
-}
+main { padding: 40px 24px; width: 100%; }
 
-.screen.active {
-  display: block;
+/* =====================================================
+   SCREENS & INPUTS
+===================================================== */
+.screen { display: none; }
+.screen.active { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 24px; 
+  animation: slideUp 0.4s ease; 
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* ======================================================
-   TYPOGRAPHY
-====================================================== */
-h2 {
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 28px;
-}
-
-.helper-text {
-  text-align: center;
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-bottom: 32px;
-}
-
-/* ======================================================
-   INPUTS
-====================================================== */
-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
+/* Inputs */
 input[type="number"] {
   width: 100%;
   padding: 14px 16px;
+  border: 2px solid var(--border-light);
   border-radius: 12px;
-  border: 1px solid var(--border-light);
-  background: #fff;
   font-size: 16px;
-  transition: 0.25s ease;
+  margin-bottom: 12px;
 }
-
-input:focus {
+input[type="number"]:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px var(--primary-glow);
+  box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
-/* ======================================================
-   BUTTON SYSTEM
-====================================================== */
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.gender-buttons,
-.question-buttons,
-.button-group {
+/* Gender & Question Buttons (Screen 1) */
+.gender-buttons, .question-buttons {
   display: flex;
-  gap: 14px;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
-/* Secondary buttons */
-.gender-buttons button,
-.question-buttons button,
-.btn-secondary {
+.gender-buttons button, 
+.question-buttons button {
   flex: 1;
-  padding: 14px;
-  border-radius: 16px;
+  padding: 12px 16px;
+  background: #fff;
   border: 2px solid var(--border-light);
-  background: linear-gradient(180deg, #ffffff, #f8fafc);
-  font-weight: 700;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.2s;
 }
 
-.gender-buttons button:hover,
+.gender-buttons button:hover, 
 .question-buttons button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
-.gender-buttons button.active,
-.question-buttons button.active {
-  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  color: #fff;
-  border-color: transparent;
-  box-shadow:
-    0 14px 32px rgba(13,148,136,0.45),
-    inset 0 0 0 1px rgba(255,255,255,0.25);
+/* Active state for simple buttons (needs JS to toggle class usually, 
+   but hover effect helps indication) */
+.gender-buttons button:active,
+.question-buttons button:active {
+  background: var(--primary-soft);
+  transform: scale(0.98);
 }
 
-/* Primary CTA */
-.btn-primary {
-  width: 100%;
-  margin-top: 36px;
-  height: 56px;
-  border-radius: 999px;
-  border: none;
-  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  color: #fff;
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  box-shadow: 0 18px 40px rgba(13,148,136,0.45);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 22px 44px rgba(13,148,136,0.55);
-}
-
-/* ======================================================
-   BODY MAP
-====================================================== */
+/* =====================================================
+   BODY MAP (Fixed Size)
+===================================================== */
 .body-map-wrapper {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(320px, 380px));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
   justify-content: center;
-  align-items: start;
-  gap: 48px;
-  margin: 48px auto;
-  max-width: 900px;
+  align-items: flex-start;
+  margin: 20px auto;
 }
 
 .body-map {
-  width: 100%;
-  max-width: 380px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  flex: 1;
+  min-width: 300px;
+  max-width: 350px;
+  text-align: center;
 }
 
-.body-map h3 {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
+.body-map h3 { margin-bottom: 16px; font-size: 18px; color: var(--primary); }
 
 .body-map-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 2;
-  max-height: 640px;
+  aspect-ratio: 1 / 2; /* Keeps the rectangle shape */
+  background: #fff;
   border-radius: 24px;
-  background:
-    radial-gradient(circle at center, rgba(13,148,136,0.05), transparent 65%),
-    #fff;
   box-shadow: var(--shadow-md);
+  user-select: none;
   overflow: hidden;
 }
 
-.body-map-container img {
+.body-image {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.body-image img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  pointer-events: none;
+  display: block;
 }
 
-/* ======================================================
-   BODY REGIONS
-====================================================== */
+/* =====================================================
+   REGIONS (Front & Back)
+===================================================== */
 .region {
   position: absolute;
   cursor: pointer;
-  border-radius: inherit;
   z-index: 10;
-  transition: transform 0.25s ease;
+  border-radius: 50%;
+  -webkit-tap-highlight-color: transparent;
 }
 
+/* Highlight Effect */
 .region::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -5px;
   border-radius: inherit;
-  background: radial-gradient(
-    circle at center,
-    rgba(13,148,136,0.45),
-    rgba(13,148,136,0.2),
-    transparent 70%
-  );
+  background: rgba(13, 148, 136, 0.4); /* Primary color semi-transparent */
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.2s;
 }
+.region:hover::after, .region.selected::after { opacity: 1; }
 
-.region:hover {
-  transform: scale(1.03);
-}
+/* --- Front View Coordinates --- */
+.region.head { top:3%; left:33%; width:34%; height:13%; }
+.region.chest { top:18%; left:25%; width:50%; height:15%; border-radius: 15px; }
+.region.abdomen { top:35%; left:28%; width:44%; height:14%; border-radius: 15px; }
+.region.left-arm { top:20%; left:2%; width:20%; height:30%; transform: rotate(25deg); border-radius: 30px; }
+.region.right-arm { top:20%; right:2%; width:20%; height:30%; transform: rotate(-25deg); border-radius: 30px; }
+.region.left-leg { top:52%; left:24%; width:20%; height:38%; border-radius: 30px; }
+.region.right-leg { top:52%; right:24%; width:20%; height:38%; border-radius: 30px; }
 
-.region:hover::after,
-.region.selected::after {
-  opacity: 1;
-}
+/* --- Back View Coordinates (NEW) --- */
+.region.back-head { top:3%; left:33%; width:34%; height:13%; }
+.region.upper-back { top:18%; left:25%; width:50%; height:18%; border-radius: 15px; }
+.region.lower-back { top:38%; left:28%; width:44%; height:12%; border-radius: 15px; }
+.region.back-left-arm { top:20%; left:2%; width:20%; height:30%; transform: rotate(25deg); border-radius: 30px; }
+.region.back-right-arm { top:20%; right:2%; width:20%; height:30%; transform: rotate(-25deg); border-radius: 30px; }
+.region.back-left-leg { top:52%; left:24%; width:20%; height:38%; border-radius: 30px; }
+.region.back-right-leg { top:52%; right:24%; width:20%; height:38%; border-radius: 30px; }
 
-/* ======================================================
-   REGION LABELS
-====================================================== */
+
+/* Region Labels */
 .region-label {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -60%) scale(0.9);
-  background: rgba(15,23,42,0.92);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -150%) scale(0.9);
+  background: rgba(15,23,42,0.95);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
   font-weight: 700;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.25s ease;
+  transition: 0.2s;
   white-space: nowrap;
+  z-index: 20;
+}
+.region:hover .region-label, .region.selected .region-label {
+  opacity: 1; transform: translate(-50%, -180%) scale(1);
 }
 
-.region:hover .region-label,
-.region.selected .region-label {
-  opacity: 1;
-  transform: translate(-50%, -120%) scale(1);
+.region-dot { display: none; } /* Hide dots if you want clean click zones */
+
+/* =====================================================
+   BUTTONS (Screen 2 List & Actions)
+===================================================== */
+/* Extra Regions Grid */
+.extra-regions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
 }
 
-/* ======================================================
-   SEVERITY SCALE
-====================================================== */
+.region-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px;
+  background-color: #fff;
+  border: 2px solid var(--border-light);
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  transition: all 0.2s ease;
+}
+.region-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
+.region-btn.selected {
+  background-color: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-hover);
+}
+
+/* Primary Action Buttons */
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  border-radius: 999px;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 8px 20px var(--primary-glow);
+  transition: transform 0.2s;
+  margin-top: 24px;
+}
+.btn-primary:hover { transform: translateY(-2px); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-secondary {
+  padding: 12px 24px;
+  background: #fff;
+  border: 2px solid var(--border-light);
+  border-radius: 16px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+.button-group .btn-secondary { flex: 0 0 auto; }
+.button-group #add-symptoms-btn { flex: 1; }
+
+.selection-display {
+    text-align: center;
+    color: var(--primary);
+    font-weight: 600;
+    margin-top: 12px;
+}
+
+/* =====================================================
+   RESULTS & SUMMARY
+===================================================== */
+.summary-box {
+    background: var(--primary-soft);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.summary-item { font-size: 14px; color: var(--text-muted); }
+.summary-item strong { color: var(--text-main); display: block; margin-bottom: 4px; }
+.summary-item.full-width { grid-column: 1 / -1; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 12px; }
+
+.disclaimer {
+    background: #fff7ed;
+    border: 1px solid #ffedd5;
+    color: #c2410c;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    margin: 24px 0;
+    line-height: 1.5;
+}
+
+.btn-outline {
+    width: 100%;
+    padding: 14px;
+    border: 2px dashed var(--border-light);
+    color: var(--text-muted);
+    border-radius: 12px;
+    font-weight: 600;
+}
+.btn-outline:hover { border-color: var(--text-muted); color: var(--text-main); }
+/* =====================================================
+   SCREEN 3: SYMPTOM LIST (Matches symptoms.js)
+===================================================== */
+
+/* 1. The Container (defined in HTML id="symptom-container") */
+/* 1. The Container (defined in HTML id="symptom-container") */
+.symptom-grid {
+  display: grid;
+  /* CHANGED: This forces a single column layout */
+  grid-template-columns: 1fr; 
+  gap: 16px;
+  width: 100%;
+}
+
+/* 2. The Card Wrapper (JS: div.className = "symptom-item") */
+.symptom-item {
+  background: #fff;
+  border: 2px solid var(--border-light);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s ease;
+}
+
+/* Highlight card when a selection is made */
+.symptom-item.has-severity {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+/* 3. The Symptom Name (JS: span.className = "symptom-name") */
+.symptom-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* 4. The Scale Container (JS: div.className = "severity-scale") */
 .severity-scale {
   display: flex;
-  gap: 10px;
+  gap: 6px;
+  width: 100%;
 }
 
+/* 5. The Buttons (JS: button.className = "severity-option") */
 .severity-option {
-  flex: 1;
-  padding: 12px 0;
-  border-radius: 14px;
-  font-weight: 700;
-  border: 1px solid var(--border-light);
+  flex: 1; /* Makes them equal width */
+  padding: 8px 2px; /* Vertical padding */
+  border-radius: 8px;
   background: #fff;
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Hover State */
+.severity-option:hover {
+  transform: translateY(-1px);
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* =====================================================
+   COLOR MAPPING (Based on data-sev="0" to "4")
+===================================================== */
+
+/* 0: None (Grey) */
+.severity-option[data-sev="0"].selected {
+  background: #64748b;
+  color: white;
+  border-color: #64748b;
+}
+
+/* 1: Mild (Green) */
+.severity-option[data-sev="1"].selected {
+  background: var(--sev-0);
+  color: white;
+  border-color: var(--sev-0);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+}
+
+/* 2: Moderate (Lime/Yellow) */
+.severity-option[data-sev="2"].selected {
+  background: var(--sev-1);
+  color: white;
+  border-color: var(--sev-1);
+  box-shadow: 0 4px 12px rgba(132, 204, 22, 0.25);
+}
+
+/* 3: Severe (Orange) */
+.severity-option[data-sev="3"].selected {
+  background: var(--sev-3);
+  color: white;
+  border-color: var(--sev-3);
+  box-shadow: 0 4px 12px rgba(251, 146, 60, 0.25);
+}
+
+/* 4: Unbearable (Red) */
+.severity-option[data-sev="4"].selected {
+  background: var(--sev-4);
+  color: white;
+  border-color: var(--sev-4);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+/* =====================================================
+   FIX: SELECTION STATES FOR SCREEN 1
+   (Gender & Duration Buttons)
+===================================================== */
+
+/* 1. Base style for these buttons (ensure transition exists) */
+.gender-buttons button, 
+.question-buttons button {
+  transition: all 0.2s ease;
+  /* existing styles... */
+}
+
+/* 2. The Active/Selected State */
+.gender-buttons button.active, 
+.question-buttons button.active {
+  background-color: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-hover);
+  box-shadow: 0 4px 12px var(--primary-glow);
+  font-weight: 700;
+  transform: translateY(-1px);
+}
+
+/* 3. Ensure the 'Add Symptoms' button transitions smoothly 
+      when JS switches it from btn-secondary to btn-primary */
+#add-symptoms-btn {
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* =====================================================
+   REGIONS (Front & Back) - IMPROVED SELECTION VISUALS
+===================================================== */
+.region {
+  position: absolute;
   cursor: pointer;
+  z-index: 10;
+  border-radius: 50%; /* Default radius, overridden by specifics below */
+  -webkit-tap-highlight-color: transparent;
+  /* Ensure the highlight doesn't spill out awkwardly during animation */
 }
 
-.severity-option.selected[data-sev="0"] { background: var(--sev-0); color: #fff; }
-.severity-option.selected[data-sev="1"] { background: var(--sev-1); }
-.severity-option.selected[data-sev="2"] { background: var(--sev-2); }
-.severity-option.selected[data-sev="3"] { background: var(--sev-3); color: #fff; }
-.severity-option.selected[data-sev="4"] { background: var(--sev-4); color: #fff; }
-
-/* ======================================================
-   RESPONSIVE
-====================================================== */
-@media (max-width: 768px) {
-  main {
-    padding: 28px 20px;
-  }
-
-  .body-map-wrapper {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .body-map {
-    max-width: 320px;
-  }
+/* The visual overlay element */
+.region::after {
+  content: '';
+  position: absolute;
+  /* Start matching the size exactly */
+  inset: 0;
+  border-radius: inherit;
+  /* Initial state: Transparent background, no shadow, invisible */
+  background: rgba(13, 148, 136, 0);
+  box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
+  opacity: 0;
+  /* Smooth transition for hover in/out */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  pointer-events: none; /* Important: lets clicks pass through to the JS */
 }
-/* ======================================================
-   BODY PART REGION POSITIONS
-====================================================== */
 
-/* ======================
-   FRONT VIEW
-====================== */
+/* --- HOVER STATE (Subtle) --- */
+/* Just a light fill, slightly expanded */
+.region:hover::after {
+  opacity: 1;
+  background: rgba(13, 148, 136, 0.15); /* Very light primary fill */
+  inset: -4px; /* Slight expansion */
+}
+
+/* --- SELECTED STATE (Distinct & Animated) --- */
+.region.selected::after {
+  opacity: 1;
+  /* 1. Stronger fill color */
+  background: rgba(13, 148, 136, 0.3);
+
+  /* 2. The "Glow" Border effect using multiple box-shadows */
+  /* Shadow 1: A thin, solid inner ring for definition */
+  /* Shadow 2: A wider, softer outer glow */
+  box-shadow:
+    0 0 0 2px rgba(13, 148, 136, 1),
+    0 0 15px rgba(13, 148, 136, 0.7);
+
+  /* Expand slightly more than hover */
+  inset: -5px;
+
+  /* 3. Attach the pulse animation */
+  animation: selectedPulse 2.5s infinite ease-in-out;
+}
+
+/* --- The Pulse Animation Keyframes --- */
+@keyframes selectedPulse {
+  0% {
+    /* Start: normal defined border, normal glow */
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 1), 0 0 15px rgba(13, 148, 136, 0.7);
+  }
+  50% {
+    /* Middle: Thicker, slightly more transparent border, wider glow */
+    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.6), 0 0 22px rgba(13, 148, 136, 0.9);
+  }
+  100% {
+    /* End: return to start */
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 1), 0 0 15px rgba(13, 148, 136, 0.7);
+  }
+}/* =====================================================
+   COORDINATES & SHAPES (Polished & Symmetrical)
+===================================================== */
+
+/* --- Front View --- */
 .region.head {
-  top: 4%;
-  left: 34%;
-  width: 32%;
-  height: 14%;
-  border-radius: 50%;
+  top: 6.5%; 
+  left: 42%; 
+  width: 16%; 
+  height: 10%;
+  border-radius: 50% 50% 60% 60% / 60% 60% 40% 40%;
 }
 
 .region.chest {
-  top: 20%;
-  left: 26%;
-  width: 48%;
-  height: 16%;
-  border-radius: 22%;
+  top: 18%; 
+  left: 33%; 
+  width: 34%; 
+  height: 17%;
+  border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
 }
 
 .region.abdomen {
-  top: 37%;
-  left: 28%;
-  width: 44%;
-  height: 15%;
-  border-radius: 22%;
+  top: 34%; /* Adjusted to sit just below chest */
+  left: 35%; 
+  width: 30%; 
+  height: 14%;
+  border-radius: 40% 40% 50% 50% / 40% 40% 60% 60%;
 }
 
 .region.left-arm {
-  top: 23%;
-  left: 5%;
-  width: 20%;
-  height: 32%;
-  border-radius: 24px;
-  transform: rotate(28deg);
+  top: 19%; 
+  left: 17%; 
+  width: 14%; 
+  height: 30%;
+  transform: rotate(24deg); 
+  border-radius: 100px; 
 }
 
 .region.right-arm {
-  top: 23%;
-  right: 5%;
-  width: 20%;
-  height: 32%;
-  border-radius: 24px;
-  transform: rotate(-28deg);
+  top: 19%; 
+  right: 17%; 
+  width: 14%; 
+  height: 30%;
+  transform: rotate(-24deg);
+  border-radius: 100px;
 }
 
 .region.left-leg {
-  top: 54%;
-  left: 26%;
-  width: 18%;
-  height: 40%;
-  border-radius: 18px;
+  top: 46%; 
+  left: 28%; 
+  width: 13%; 
+  height: 48%; /* Long leg style */
+  transform: rotate(8deg);
+  border-radius: 30px; 
 }
 
 .region.right-leg {
-  top: 54%;
-  right: 26%;
-  width: 18%;
-  height: 40%;
-  border-radius: 18px;
+  top: 46%; 
+  right: 28%; 
+  width: 13%; 
+  height: 48%; /* Long leg style */
+  transform: rotate(-8deg);
+  border-radius: 30px; 
 }
 
-/* ======================
-   BACK VIEW
-====================== */
+/* --- Back View --- */
+/* NOW MATCHES FRONT VIEW SYMMETRY */
+
 .region.back-head {
-  top: 4%;
-  left: 34%;
-  width: 32%;
-  height: 14%;
+  top: 6.5%; 
+  left: 42%; 
+  width: 16%; 
+  height: 10%;
   border-radius: 50%;
 }
 
 .region.upper-back {
-  top: 20%;
-  left: 26%;
-  width: 48%;
-  height: 18%;
-  border-radius: 22%;
+  top: 18%; 
+  left: 32%; 
+  width: 36%; 
+  height: 19%;
+  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
 }
 
 .region.lower-back {
-  top: 39%;
-  left: 28%;
-  width: 44%;
-  height: 14%;
-  border-radius: 22%;
+  top: 38%; 
+  left: 35%; 
+  width: 30%; 
+  height: 13%;
+  border-radius: 40% 40% 50% 50% / 30% 30% 60% 60%;
 }
 
 .region.back-left-arm {
-  top: 23%;
-  left: 5%;
-  width: 20%;
-  height: 32%;
-  border-radius: 24px;
-  transform: rotate(28deg);
+  top: 19%; 
+  left: 17%; /* Fixed: Matches Front Left Arm */
+  width: 14%; /* Fixed: Was 10%, now 14% to match right */
+  height: 30%;
+  transform: rotate(24deg);
+  border-radius: 100px;
 }
 
 .region.back-right-arm {
-  top: 23%;
-  right: 5%;
-  width: 20%;
-  height: 32%;
-  border-radius: 24px;
-  transform: rotate(-28deg);
+  top: 19%; 
+  right: 17%; 
+  width: 14%; 
+  height: 30%;
+  transform: rotate(-24deg);
+  border-radius: 100px;
 }
 
 .region.back-left-leg {
-  top: 54%;
-  left: 26%;
-  width: 18%;
-  height: 40%;
-  border-radius: 18px;
+  top: 46%; /* Fixed: Moved up to match Front Leg */
+  left: 28%; 
+  width: 13%; 
+  height: 48%;
+  transform: rotate(8deg);
+  border-radius: 30px;
 }
 
 .region.back-right-leg {
-  top: 54%;
-  right: 26%;
-  width: 18%;
-  height: 40%;
-  border-radius: 18px;
+  top: 46%; /* Fixed: Moved up to match Front Leg */
+  right: 28%; 
+  width: 13%; 
+  height: 48%;
+  transform: rotate(-8deg);
+  border-radius: 30px;
 }
