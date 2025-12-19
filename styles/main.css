@@ -2,7 +2,7 @@
    🌊 GLOBAL DESIGN TOKENS
 ====================================================== */
 :root {
-  /* Severity */
+  /* Severity scale */
   --sev-0: #16a34a;
   --sev-1: #84cc16;
   --sev-2: #facc15;
@@ -12,12 +12,12 @@
   /* Brand */
   --primary: #0d9488;
   --primary-hover: #0f766e;
-  --primary-glow: rgba(13,148,136,0.35);
   --primary-soft: #f0fdfa;
+  --primary-glow: rgba(13,148,136,0.35);
 
-  /* Surface */
-  --bg-main: linear-gradient(180deg, #f0fdfa, #f0f2f5);
-  --card-bg: rgba(255,255,255,0.85);
+  /* Surfaces */
+  --bg-main: linear-gradient(180deg, #f0fdfa, #f1f5f9);
+  --card-bg: rgba(255,255,255,0.88);
   --glass: rgba(255,255,255,0.65);
 
   /* Text */
@@ -29,15 +29,16 @@
 
   /* Shadows */
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-sm: 0 4px 12px rgba(0,0,0,0.06);
-  --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
-  --shadow-glow: 0 0 0 4px var(--primary-glow);
+  --shadow-sm: 0 6px 14px rgba(0,0,0,0.08);
+  --shadow-md: 0 18px 40px rgba(0,0,0,0.12);
 }
 
 /* ======================================================
    RESET
 ====================================================== */
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -59,7 +60,7 @@ body {
 }
 
 /* ======================================================
-   CONTAINER
+   APP CONTAINER
 ====================================================== */
 .container {
   width: 100%;
@@ -69,24 +70,24 @@ body {
   border-radius: 24px;
   box-shadow: var(--shadow-md);
   overflow: hidden;
-  animation: fadeIn 0.6s ease;
+  animation: fadeIn 0.5s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ======================================================
-   HEADER (PREMIUM)
+   HEADER
 ====================================================== */
 header {
   position: relative;
   padding: 40px;
   background:
-    radial-gradient(1200px 300px at top right, rgba(255,255,255,0.15), transparent),
+    radial-gradient(1200px 300px at top right, rgba(255,255,255,0.18), transparent),
     linear-gradient(135deg, var(--primary), var(--primary-hover));
-  color: white;
+  color: #fff;
 }
 
 header h1 {
@@ -101,16 +102,20 @@ header p {
 }
 
 /* ======================================================
-   MAIN
+   MAIN / SCREENS
 ====================================================== */
 main {
   max-width: 840px;
   margin: 0 auto;
   padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .screen {
   display: none;
+  width: 100%;
   animation: slideUp 0.35s ease;
 }
 
@@ -144,10 +149,10 @@ h2 {
    INPUTS
 ====================================================== */
 label {
+  display: block;
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
-  display: block;
 }
 
 input[type="number"] {
@@ -155,20 +160,25 @@ input[type="number"] {
   padding: 14px 16px;
   border-radius: 12px;
   border: 1px solid var(--border-light);
-  background: white;
+  background: #fff;
   font-size: 16px;
-  transition: 0.25s;
+  transition: 0.25s ease;
 }
 
 input:focus {
   outline: none;
-  box-shadow: var(--shadow-glow);
   border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
 /* ======================================================
-   BUTTONS (JUICY)
+   BUTTON SYSTEM
 ====================================================== */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .gender-buttons,
 .question-buttons,
 .button-group {
@@ -176,612 +186,60 @@ input:focus {
   gap: 14px;
 }
 
+/* Secondary buttons */
 .gender-buttons button,
-.question-buttons button {
+.question-buttons button,
+.btn-secondary {
   flex: 1;
   padding: 14px;
-  border-radius: 14px;
-  border: 1px solid var(--border-light);
-  background: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.gender-buttons button:hover {
-  transform: translateY(-2px);
+  border-radius: 16px;
+  border: 2px solid var(--border-light);
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  font-weight: 700;
   box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.gender-buttons button.active {
+.gender-buttons button:hover,
+.question-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.gender-buttons button.active,
+.question-buttons button.active {
   background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  color: white;
-  border: none;
+  color: #fff;
+  border-color: transparent;
+  box-shadow:
+    0 14px 32px rgba(13,148,136,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.25);
 }
 
 /* Primary CTA */
 .btn-primary {
   width: 100%;
   margin-top: 36px;
-  padding: 16px;
-  border-radius: 16px;
+  height: 56px;
+  border-radius: 999px;
   border: none;
   background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  color: white;
-  font-size: 16px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: var(--shadow-sm);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: var(--shadow-md);
-}
-
-/* ======================================================
-   BODY MAP (INTERACTIVE)
-====================================================== */
-.body-map {
-  max-width: 260px;           /* 👈 controls overall size */
-  width: 100%;
-}
-
-.body-map-wrapper {
-  display: flex;
-  gap: 36px;
-  justify-content: center;
-  margin: 32px 0;
-}
-
-.body-map-container {
-aspect-ratio: 1 / 2;        /* human body ratio */
-  height: auto;
-  max-height: 520px;          /* 👈 hard cap */
-  padding-bottom: 0;          /* REMOVE 200% hack */
-  position: relative;
-  border-radius: 20px;
-  background: white;
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-}
-.body-map-container img {
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: contain;
-}
-
-
-.region {
-  position: absolute;
-  cursor: pointer;
-}
-
-.region:hover::after,
-.region.selected::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, rgba(13,148,136,0.35), rgba(13,148,136,0.15));
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 2px var(--primary);
-}
-
-/* ======================================================
-   BODY REGIONS — PREMIUM INTERACTION
-====================================================== */
-
-/* Base region */
-.region {
-    position: absolute;
-    cursor: pointer;
-    z-index: 10;
-    border-radius: inherit;
-    transition:
-        transform 0.25s ease,
-        filter 0.25s ease;
-}
-
-/* Hover glow (soft, medical, not neon) */
-.region::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-        circle at center,
-        rgba(13,148,136,0.35),
-        rgba(13,148,136,0.15),
-        transparent 70%
-    );
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
-
-/* Hover state */
-.region:hover {
-    transform: scale(1.03);
-    filter: brightness(1.05);
-}
-
-.region:hover::after {
-    opacity: 1;
-}
-
-/* Selected = confident + calm */
-.region.selected {
-    transform: scale(1.05);
-    z-index: 20;
-}
-
-.region.selected::after {
-    opacity: 1;
-    background: radial-gradient(
-        circle at center,
-        rgba(13,148,136,0.45),
-        rgba(13,148,136,0.25),
-        transparent 75%
-    );
-    box-shadow:
-        inset 0 0 0 2px var(--primary),
-        0 0 20px rgba(13,148,136,0.35);
-}
-
-/* ======================================================
-   BODY REGION LABELS (CLEAN AF)
-====================================================== */
-
-.region-label {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -60%) scale(0.9);
-    background: rgba(15,23,42,0.92);
-    backdrop-filter: blur(6px);
-    color: white;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.25s ease;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-    white-space: nowrap;
-}
-
-/* Label reveal */
-.region:hover .region-label,
-.region.selected .region-label {
-    opacity: 1;
-    transform: translate(-50%, -120%) scale(1);
-}
-
-/* ======================================================
-   BODY MAP CONTAINER — DEPTH
-====================================================== */
-
-.body-map-container {
-    position: relative;
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(13,148,136,0.04),
-            transparent 65%
-        ),
-        white;
-    box-shadow:
-        inset 0 0 0 1px rgba(15,23,42,0.06),
-        0 10px 30px rgba(0,0,0,0.08);
-}
-
-/* ======================================================
-   OPTIONAL: SEVERITY-AWARE BODY REGIONS
-   (future-proof, won’t break anything)
-====================================================== */
-
-.region[data-sev="0"].selected::after { box-shadow: 0 0 20px rgba(22,163,74,0.5); }
-.region[data-sev="1"].selected::after { box-shadow: 0 0 22px rgba(132,204,22,0.5); }
-.region[data-sev="2"].selected::after { box-shadow: 0 0 24px rgba(250,204,21,0.5); }
-.region[data-sev="3"].selected::after { box-shadow: 0 0 26px rgba(251,146,60,0.55); }
-.region[data-sev="4"].selected::after { box-shadow: 0 0 30px rgba(239,68,68,0.6); }
-
-/* ======================================================
-   SEVERITY (EMOTIONAL)
-====================================================== */
-.severity-scale {
-  display: flex;
-  gap: 10px;
-}
-
-.severity-option {
-  flex: 1;
-  padding: 12px 0;
-  border-radius: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  border: 1px solid var(--border-light);
-  background: white;
-  transition: 0.25s;
-}
-
-.severity-option.selected[data-sev="0"] { background: var(--sev-0); color: white; }
-.severity-option.selected[data-sev="1"] { background: var(--sev-1); }
-.severity-option.selected[data-sev="2"] { background: var(--sev-2); }
-.severity-option.selected[data-sev="3"] { background: var(--sev-3); color: white; }
-.severity-option.selected[data-sev="4"] { background: var(--sev-4); color: white; }
-
-/* ======================================================
-   RESULTS (CARDY + CLEAN)
-====================================================== */
-.diagnostic-card {
-  padding: 24px;
-  border-radius: 16px;
-  background: white;
-  box-shadow: var(--shadow-sm);
-  border-left: 6px solid #cbd5e1;
-}
-
-.diagnostic-card.strong {
-  border-left-color: #0284c7;
-  background: #f0f9ff;
-}
-
-.diagnostic-card.moderate {
-  border-left-color: #f59e0b;
-  background: #fffbeb;
-}
-
-/* ======================================================
-   TRANSLATE (GLASS)
-====================================================== */
-.translate-wrapper {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 8px 12px;
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  box-shadow: var(--shadow-xs);
-}
-
-.translate-label {
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: white;
-  margin-bottom: 4px;
-}
-
-/* ======================================================
-   RESPONSIVE
-====================================================== */
-@media (max-width: 768px) {
-  main { padding: 28px 20px; }
-  .body-map-wrapper { flex-direction: column; }
-}
-
-/* BODY MAP SHOULD NOT BLOCK UI BELOW */
-.body-map-container {
-  position: relative;
-  isolation: isolate; /* creates a stacking context */
-}
-
-/* Regions ONLY interact inside body map */
-.body-map-container .region {
-  pointer-events: auto;
-}
-
-/* Prevent invisible overlays from blocking clicks */
-.body-map-wrapper {
-  position: relative;
-  z-index: 1;
-}
-
-/* Ensure questions & inputs are always clickable */
-.question,
-.question-buttons,
-.button-group,
-input,
-button {
-  position: relative;
-  z-index: 5;
-}
-.question-buttons button {
-  backdrop-filter: blur(6px);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.question-buttons button:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-/* ======================================================
-   QUESTION BUTTONS — ACTIVE STATE (FIX)
-====================================================== */
-
-.question-buttons button.active {
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--primary-hover)
-  );
-  color: white;
-  border: none;
-  box-shadow:
-    0 8px 20px rgba(13,148,136,0.35),
-    inset 0 0 0 1px rgba(255,255,255,0.25);
-  transform: translateY(-1px);
-}
-
-/* Optional: stronger focus feedback */
-.question-buttons button.active:hover {
-  transform: translateY(-2px) scale(1.01);
-}
-
-/* ======================================================
-   BODY PART REGION POSITIONS (RESTORED)
-====================================================== */
-
-/* FRONT */
-.region.head {
-  top: 5%;
-  left: 35%;
-  width: 30%;
-  height: 14%;
-  border-radius: 50%;
-}
-
-.region.chest {
-  top: 20%;
-  left: 28%;
-  width: 44%;
-  height: 16%;
-  border-radius: 22%;
-}
-
-.region.abdomen {
-  top: 37%;
-  left: 30%;
-  width: 40%;
-  height: 15%;
-  border-radius: 22%;
-}
-
-.region.left-arm {
-  top: 24%;
-  left: 6%;
-  width: 18%;
-  height: 30%;
-  border-radius: 24px;
-  transform: rotate(30deg);
-}
-
-.region.right-arm {
-  top: 24%;
-  right: 6%;
-  width: 18%;
-  height: 30%;
-  border-radius: 24px;
-  transform: rotate(-30deg);
-}
-
-.region.left-leg {
-  top: 54%;
-  left: 26%;
-  width: 18%;
-  height: 38%;
-  border-radius: 18px;
-}
-
-.region.right-leg {
-  top: 54%;
-  right: 26%;
-  width: 18%;
-  height: 38%;
-  border-radius: 18px;
-}
-
-/* BACK */
-.region.back-head {
-  top: 5%;
-  left: 35%;
-  width: 30%;
-  height: 14%;
-  border-radius: 50%;
-}
-
-.region.upper-back {
-  top: 20%;
-  left: 28%;
-  width: 44%;
-  height: 18%;
-  border-radius: 22%;
-}
-
-.region.lower-back {
-  top: 39%;
-  left: 30%;
-  width: 40%;
-  height: 14%;
-  border-radius: 22%;
-}
-
-.region.back-left-arm {
-  top: 24%;
-  left: 6%;
-  width: 18%;
-  height: 30%;
-  border-radius: 24px;
-  transform: rotate(30deg);
-}
-
-.region.back-right-arm {
-  top: 24%;
-  right: 6%;
-  width: 18%;
-  height: 30%;
-  border-radius: 24px;
-  transform: rotate(-30deg);
-}
-
-.region.back-left-leg {
-  top: 54%;
-  left: 26%;
-  width: 18%;
-  height: 38%;
-  border-radius: 18px;
-}
-
-.region.back-right-leg {
-  top: 54%;
-  right: 26%;
-  width: 18%;
-  height: 38%;
-  border-radius: 18px;
-}
-/* ===== BODY MAP SECTION ALIGNMENT FIX ===== */
-
-.body-map-wrapper {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(220px, 280px));
-  justify-content: center;
-  align-items: start;
-  gap: 32px;
-  margin: 40px auto;
-  max-width: 650px;   /* 👈 prevents right-side emptiness */
-}
-.body-map {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-.body-map h3 {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.body-map-container {
-  width: 100%;
-  aspect-ratio: 1 / 2;
-  max-height: 520px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-/* ===== BODY MAP SIZE + ALIGNMENT (UPGRADED) ===== */
-
-.body-map-wrapper {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(320px, 380px));
-  justify-content: center;
-  align-items: start;
-  gap: 48px;
-  margin: 48px auto;
-  max-width: 900px;
-}
-
-.body-map {
-  width: 100%;
-  max-width: 380px;   /* 🔥 BIGGER, CONFIDENT */
-}
-.body-map-container {
-  aspect-ratio: 1 / 2;
-  max-height: 640px;   /* 🔥 taller body */
-  width: 100%;
-  border-radius: 24px;
-}
-/* ===== PRIMARY CTA — BOSS MODE ===== */
-
-.btn-primary {
-  height: 56px;
+  color: #fff;
   font-size: 17px;
+  font-weight: 800;
   letter-spacing: 0.02em;
-  border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--primary-hover)
-  );
-  box-shadow:
-    0 16px 36px rgba(13,148,136,0.45);
+  box-shadow: 0 18px 40px rgba(13,148,136,0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow:
-    0 22px 44px rgba(13,148,136,0.55);
-}
-.btn-secondary {
-  border: 2px solid var(--border-light);
-  font-weight: 700;
-  background: white;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 22px 44px rgba(13,148,136,0.55);
 }
 
-.btn-secondary:hover {
-  background: var(--primary-soft);
-  border-color: var(--primary);
-}
-/* ===== QUESTION BUTTONS — RESTORE PRIDE ===== */
-
-.question-buttons button {
-  background: linear-gradient(
-    180deg,
-    #ffffff,
-    #f8fafc
-  );
-  border: 2px solid var(--border-light);
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  box-shadow:
-    0 4px 10px rgba(0,0,0,0.06);
-}
-
-.question-buttons button:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 10px 22px rgba(0,0,0,0.12);
-}
-
-.question-buttons button.active {
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--primary-hover)
-  );
-  color: white;
-  border-color: transparent;
-  box-shadow:
-    0 12px 28px rgba(13,148,136,0.45),
-    inset 0 0 0 1px rgba(255,255,255,0.25);
-}
-@media (max-width: 768px) {
-  .body-map-wrapper {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .body-map {
-    max-width: 320px;
-  }
-}
 /* ======================================================
-   🔒 FINAL OVERRIDES — SINGLE SOURCE OF TRUTH
+   BODY MAP
 ====================================================== */
-
-/* ===== BODY MAP LAYOUT ===== */
 .body-map-wrapper {
   display: grid;
   grid-template-columns: repeat(2, minmax(320px, 380px));
@@ -804,27 +262,24 @@ main {
 .body-map h3 {
   font-size: 14px;
   font-weight: 700;
-  color: var(--text-muted);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--text-muted);
 }
 
-/* ===== BODY MAP CARD ===== */
 .body-map-container {
+  position: relative;
   width: 100%;
   aspect-ratio: 1 / 2;
   max-height: 640px;
   border-radius: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
+  background:
+    radial-gradient(circle at center, rgba(13,148,136,0.05), transparent 65%),
+    #fff;
   box-shadow: var(--shadow-md);
-  position: relative;
   overflow: hidden;
 }
 
-/* ===== BODY IMAGE ===== */
 .body-map-container img {
   width: 100%;
   height: 100%;
@@ -832,49 +287,99 @@ main {
   pointer-events: none;
 }
 
-/* ===== BODY REGIONS ===== */
-.body-map-container .region {
-  pointer-events: auto;
+/* ======================================================
+   BODY REGIONS
+====================================================== */
+.region {
+  position: absolute;
+  cursor: pointer;
+  border-radius: inherit;
   z-index: 10;
+  transition: transform 0.25s ease;
 }
 
-/* ===== QUESTION BUTTONS (FINAL) ===== */
-.question-buttons button {
-  padding: 14px;
-  border-radius: 16px;
-  font-weight: 700;
-  background: linear-gradient(180deg, #ffffff, #f8fafc);
-  border: 2px solid var(--border-light);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.region::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at center,
+    rgba(13,148,136,0.45),
+    rgba(13,148,136,0.2),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
-.question-buttons button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(0,0,0,0.14);
+.region:hover {
+  transform: scale(1.03);
 }
 
-.question-buttons button.active {
-  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  color: white;
-  border-color: transparent;
-  box-shadow:
-    0 14px 32px rgba(13,148,136,0.45),
-    inset 0 0 0 1px rgba(255,255,255,0.25);
+.region:hover::after,
+.region.selected::after {
+  opacity: 1;
 }
 
-/* ===== PRIMARY CTA (FINAL) ===== */
-.btn-primary {
-  height: 56px;
+/* ======================================================
+   REGION LABELS
+====================================================== */
+.region-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%) scale(0.9);
+  background: rgba(15,23,42,0.92);
+  color: #fff;
+  padding: 6px 10px;
   border-radius: 999px;
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  box-shadow: 0 18px 40px rgba(13,148,136,0.45);
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  white-space: nowrap;
 }
 
-/* ===== MOBILE ===== */
+.region:hover .region-label,
+.region.selected .region-label {
+  opacity: 1;
+  transform: translate(-50%, -120%) scale(1);
+}
+
+/* ======================================================
+   SEVERITY SCALE
+====================================================== */
+.severity-scale {
+  display: flex;
+  gap: 10px;
+}
+
+.severity-option {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 14px;
+  font-weight: 700;
+  border: 1px solid var(--border-light);
+  background: #fff;
+  cursor: pointer;
+}
+
+.severity-option.selected[data-sev="0"] { background: var(--sev-0); color: #fff; }
+.severity-option.selected[data-sev="1"] { background: var(--sev-1); }
+.severity-option.selected[data-sev="2"] { background: var(--sev-2); }
+.severity-option.selected[data-sev="3"] { background: var(--sev-3); color: #fff; }
+.severity-option.selected[data-sev="4"] { background: var(--sev-4); color: #fff; }
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
 @media (max-width: 768px) {
+  main {
+    padding: 28px 20px;
+  }
+
   .body-map-wrapper {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -883,4 +388,129 @@ main {
   .body-map {
     max-width: 320px;
   }
+}
+/* ======================================================
+   BODY PART REGION POSITIONS
+====================================================== */
+
+/* ======================
+   FRONT VIEW
+====================== */
+.region.head {
+  top: 4%;
+  left: 34%;
+  width: 32%;
+  height: 14%;
+  border-radius: 50%;
+}
+
+.region.chest {
+  top: 20%;
+  left: 26%;
+  width: 48%;
+  height: 16%;
+  border-radius: 22%;
+}
+
+.region.abdomen {
+  top: 37%;
+  left: 28%;
+  width: 44%;
+  height: 15%;
+  border-radius: 22%;
+}
+
+.region.left-arm {
+  top: 23%;
+  left: 5%;
+  width: 20%;
+  height: 32%;
+  border-radius: 24px;
+  transform: rotate(28deg);
+}
+
+.region.right-arm {
+  top: 23%;
+  right: 5%;
+  width: 20%;
+  height: 32%;
+  border-radius: 24px;
+  transform: rotate(-28deg);
+}
+
+.region.left-leg {
+  top: 54%;
+  left: 26%;
+  width: 18%;
+  height: 40%;
+  border-radius: 18px;
+}
+
+.region.right-leg {
+  top: 54%;
+  right: 26%;
+  width: 18%;
+  height: 40%;
+  border-radius: 18px;
+}
+
+/* ======================
+   BACK VIEW
+====================== */
+.region.back-head {
+  top: 4%;
+  left: 34%;
+  width: 32%;
+  height: 14%;
+  border-radius: 50%;
+}
+
+.region.upper-back {
+  top: 20%;
+  left: 26%;
+  width: 48%;
+  height: 18%;
+  border-radius: 22%;
+}
+
+.region.lower-back {
+  top: 39%;
+  left: 28%;
+  width: 44%;
+  height: 14%;
+  border-radius: 22%;
+}
+
+.region.back-left-arm {
+  top: 23%;
+  left: 5%;
+  width: 20%;
+  height: 32%;
+  border-radius: 24px;
+  transform: rotate(28deg);
+}
+
+.region.back-right-arm {
+  top: 23%;
+  right: 5%;
+  width: 20%;
+  height: 32%;
+  border-radius: 24px;
+  transform: rotate(-28deg);
+}
+
+.region.back-left-leg {
+  top: 54%;
+  left: 26%;
+  width: 18%;
+  height: 40%;
+  border-radius: 18px;
+}
+
+.region.back-right-leg {
+  top: 54%;
+  right: 26%;
+  width: 18%;
+  height: 40%;
+  border-radius: 18px;
 }
