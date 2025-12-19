@@ -156,10 +156,11 @@
     .body-map { text-align: center; }
     .body-map h3 { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; }
     .body-map-container {
-      position: relative; width: 300px; height: 600px;
-      background: #fff; border-radius: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; overflow: hidden;
-    }
+  position: relative;
+  width: 300px;
+  aspect-ratio: 1 / 2;  /* ✔ keeps proportions */
+  }
+
     .body-image img { width: 100%; height: 100%; object-fit: contain; padding: 20px; pointer-events: none; }
 
     .region { position: absolute; cursor: pointer; z-index: 10; border-radius: 50%; transition: all 0.3s ease; }
@@ -186,21 +187,21 @@
     .region-dot { display: none; }
 
     /* Coordinates */
-    .region.head { top: 6%; left: 42%; width: 16%; height: 10%; border-radius: 50% 50% 60% 60% / 60% 60% 40% 40%; }
-    .region.chest { top: 18%; left: 33%; width: 34%; height: 17%; border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%; }
-    .region.abdomen { top: 34%; left: 35%; width: 30%; height: 14%; border-radius: 40% 40% 50% 50% / 40% 40% 60% 60%; }
-    .region.left-arm { top: 19%; left: 17%; width: 14%; height: 30%; transform: rotate(24deg); border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%; }
-    .region.right-arm { top: 19%; right: 17%; width: 14%; height: 30%; transform: rotate(-24deg); border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%; }
-    .region.left-leg { top: 46%; left: 28%; width: 13.5%; height: 48%; transform: rotate(8deg); border-radius: 40% 60% 50% 50% / 35% 35% 65% 65%; }
-    .region.right-leg { top: 46%; right: 28%; width: 13.5%; height: 48%; transform: rotate(-8deg); border-radius: 60% 40% 50% 50% / 35% 35% 65% 65%; }
+    .region.head { top: 4%; left: 42%; width: 16%; height: 10%; border-radius: 50% 50% 60% 60% / 60% 60% 40% 40%; }
+    .region.chest { top: 18%; left: 35%; width: 29%; height: 16%; border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%; }
+    .region.abdomen { top: 31%; left: 35%; width: 28%; height: 14%; border-radius: 40% 40% 50% 50% / 40% 40% 60% 60%; }
+    .region.left-arm { top: 15%; left: 18%; width: 15%; height: 30%; transform: rotate(31deg); border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%; }
+    .region.right-arm { top: 15%; right: 18%; width: 15%; height: 30%; transform: rotate(-31deg); border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%; }
+    .region.left-leg { top: 46%; left: 28%; width: 13.5%; height:39%; transform: rotate(8deg); border-radius: 40% 60% 50% 50% / 35% 35% 65% 65%; }
+    .region.right-leg { top: 46%; right: 28%; width: 13.5%; height: 39%; transform: rotate(-8deg); border-radius: 60% 40% 50% 50% / 35% 35% 65% 65%; }
     /* Back View */
-    .region.back-head { top: 6%; left: 42%; width: 16%; height: 10%; border-radius: 50%; }
-    .region.upper-back { top: 18%; left: 32%; width: 36%; height: 19%; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; }
-    .region.lower-back { top: 38%; left: 35%; width: 30%; height: 13%; border-radius: 40% 40% 50% 50% / 30% 30% 60% 60%; }
-    .region.back-left-arm { top: 19%; left: 17%; width: 14%; height: 30%; transform: rotate(24deg); border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%; }
-    .region.back-right-arm { top: 19%; right: 17%; width: 14%; height: 30%; transform: rotate(-24deg); border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%; }
-    .region.back-left-leg { top: 46%; left: 28%; width: 13.5%; height: 48%; transform: rotate(8deg); border-radius: 40% 60% 50% 50% / 35% 35% 65% 65%; }
-    .region.back-right-leg { top: 46%; right: 28%; width: 13.5%; height: 48%; transform: rotate(-8deg); border-radius: 60% 40% 50% 50% / 35% 35% 65% 65%; }
+    .region.back-head { top: 3%; left: 42%; width: 16%; height: 10%; border-radius: 50%; }
+    .region.upper-back { top: 13%; left: 38%; width: 24%; height: 15%; border-radius: 40% 40% 30% 30% / 50% 50% 40% 40%; }
+    .region.lower-back { top: 26%; left: 35%; width: 30%; height: 13%; border-radius: 40% 40% 50% 50% / 30% 30% 60% 60%; }
+    .region.back-left-arm { top: 13%; left: 18%; width: 14%; height: 30%; transform: rotate(32deg); border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%; }
+    .region.back-right-arm { top:13%; right: 18%; width: 14%; height: 30%; transform: rotate(-32deg); border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%; }
+    .region.back-left-leg { top: 40%; left: 28%; width: 15%; height: 41%; transform: rotate(8deg); border-radius: 40% 60% 50% 50% / 35% 35% 65% 65%; }
+    .region.back-right-leg { top: 40%; right: 28%; width: 15%; height: 41%; transform: rotate(-8deg); border-radius: 60% 40% 50% 50% / 35% 35% 65% 65%; }
 
     /* ================= EXTRA BUTTONS ================= */
     .extra-regions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
