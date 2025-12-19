@@ -1,5 +1,4 @@
 // scripts/api.js
-// scripts/api.js
 
 function toSnakeCase(str) {
     return str && str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
@@ -7,10 +6,11 @@ function toSnakeCase(str) {
         .join('_');
 }
 
-// FIX: Automatically detect if we are Local or on Vercel
-const API_URL = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
-    ? "http://127.0.0.1:8000"  // Local Python Server
-    : "";                      // Vercel (Relative Path)
+// FIX: Smart URL Detection
+// If running on localhost/127.0.0.1, use Python server port 8000
+// If running on Vercel, use "" (relative path) so Vercel handles the routing
+const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+const API_URL = isLocal ? "http://127.0.0.1:8000" : ""; 
 
 async function getDiagnosis(appState) {
   const symptoms = {};
@@ -27,11 +27,18 @@ async function getDiagnosis(appState) {
   const type = appState.severe === "Yes" ? "acute" : "chronic";
 
   try {
-    // FIX: Added /api to the path so it matches both local and Vercel routing
+    console.log("Sending request to:", `${API_URL}/api/predict`);
+    
+    // Note the /api/predict path. This matches the Vercel rewrite rule.
     const response = await fetch(`${API_URL}/api/predict`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ symptoms: symptoms, type: type })
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        symptoms: symptoms,
+        type: type
+      })
     });
 
     if (!response.ok) {
@@ -55,32 +62,7 @@ async function getDiagnosis(appState) {
     return [{
       condition: "Connection Error",
       confidence: 0,
-      advice: `Could not connect. If local, ensure backend is on port 8000. If Vercel, check server logs.`
-    }];
-  }
-}
-
-    const data = await response.json();
-
-    // 4. Process Results
-    if (!data.predictions || data.predictions.length === 0) {
-      // Return a fallback object matching the UI structure
-      return [{
-        condition: "No clear diagnosis", // Matches 'pred.condition' in main.js
-        confidence: 0,                   // Matches 'pred.confidence' in main.js
-        advice: "Your symptoms do not match our database clearly. Please consult a general physician."
-      }];
-    }
-
-    return data.predictions;
-
-  } catch (error) {
-    console.error("Prediction Error:", error);
-    // Return an error object matching the UI structure
-    return [{
-      condition: "Connection Error",  // Matches 'pred.condition' in main.js
-      confidence: 0,                  // Matches 'pred.confidence' in main.js
-      advice: `Could not connect to the analysis server. Ensure backend is running at ${API_URL}`
+      advice: `Could not connect to analysis server. (${error.message})`
     }];
   }
 }
