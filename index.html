@@ -13,6 +13,11 @@
 <body>
   <div class="container fade-in">
     <header>
+      <div class="translate-wrapper">
+        <span class="translate-label">Translate</span>
+        <div id="google_translate_element"></div>
+      </div>
+
       <h1>🏥 Symptom Checker</h1>
       <p id="header-subtitle">Let's start with some basic questions</p>
     </header>
@@ -34,8 +39,8 @@
         <div class="question">
           <p>How long did you had the symptoms?</p>
           <div class="question-buttons">
-            <button onclick="answerSevere('Yes')">More than 10 days</button>
-            <button onclick="answerSevere('No')">Less than 10 days</button>
+            <button onclick="answerSevere('Yes',this)">More than 10 days</button>
+            <button onclick="answerSevere('No',this)">Less than 10 days</button>
           </div>
         </div>
 
@@ -120,7 +125,7 @@
         <div class="summary-box">
             <div class="summary-item"><strong>Age:</strong> <span id="sum-age">-</span></div>
             <div class="summary-item"><strong>Sex:</strong> <span id="sum-gender">-</span></div>
-            <div class="summary-item"><strong>Severe:</strong> <span id="sum-severe">-</span></div>
+            <div class="summary-item"><strong>Chronic or Acute:</strong> <span id="sum-severe">-</span></div>
             <div class="summary-item full-width"><strong>Total Regions:</strong> <span id="sum-regions-count">-</span></div>
         </div>
 
@@ -141,5 +146,14 @@
   <script src="scripts/symptoms.js"></script>
   <script src="scripts/api.js"></script>
   <script src="scripts/main.js"></script>
+  <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {pageLanguage: 'en'}, 
+          'google_translate_element'
+        );
+      }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

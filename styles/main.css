@@ -1,708 +1,886 @@
+/* ======================================================
+   🌊 GLOBAL DESIGN TOKENS
+====================================================== */
 :root {
-  --sev-0: #16a34a;   /* green */
-  --sev-1: #84cc16;   /* lime */
-  --sev-2: #facc15;   /* yellow */
-  --sev-3: #f97316;   /* orange */
-  --sev-4: #dc2626;   /* red */
+  /* Severity */
+  --sev-0: #16a34a;
+  --sev-1: #84cc16;
+  --sev-2: #facc15;
+  --sev-3: #fb923c;
+  --sev-4: #ef4444;
+
+  /* Brand */
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --primary-glow: rgba(13,148,136,0.35);
+  --primary-soft: #f0fdfa;
+
+  /* Surface */
+  --bg-main: linear-gradient(180deg, #f0fdfa, #f0f2f5);
+  --card-bg: rgba(255,255,255,0.85);
+  --glass: rgba(255,255,255,0.65);
+
+  /* Text */
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+
+  /* Borders */
+  --border-light: rgba(15,23,42,0.08);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
+  --shadow-glow: 0 0 0 4px var(--primary-glow);
 }
 
-:root {
-    --bg-main: #f0f2f5;
-    --card-bg: #ffffff;
-
-    /* Modern Teal Brand Colors */
-    --primary: #0d9488;          /* Teal-600 */
-    --primary-hover: #0f766e;    /* Teal-700 */
-    --primary-light: #ccfbf1;    /* Teal-100 */
-    --primary-border: #99f6e4;   /* Teal-200 */
-
-    /* UI Colors */
-    --text-main: #111827;        /* Gray-900 */
-    --text-muted: #6b7280;       /* Gray-500 */
-    --border-light: #e5e7eb;     /* Gray-200 */
-    --danger: #ef4444;           /* Red-500 */
-    --danger-bg: #fef2f2;        /* Red-50 */
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
+/* ======================================================
+   RESET
+====================================================== */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* ======================================================
+   BASE
+====================================================== */
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    min-height: 100vh;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    line-height: 1.5;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  line-height: 1.6;
 }
 
-/* =====================
-   Layout & Container
-===================== */
-
+/* ======================================================
+   CONTAINER
+====================================================== */
 .container {
-    width: 100%;
-    max-width: 900px;
-    background: var(--card-bg);
-    border-radius: 16px;
-    box-shadow: var(--shadow-lg);
-    overflow: hidden;
-    margin-top: 20px;
-    margin-bottom: 40px;
-}
-
-/* Simple fade-in animation for page load */
-.fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+  width: 100%;
+  max-width: 1100px;
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  animation: fadeIn 0.6s ease;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ======================================================
+   HEADER (PREMIUM)
+====================================================== */
 header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-    padding: 30px 40px;
-    color: white;
+  position: relative;
+  padding: 40px;
+  background:
+    radial-gradient(1200px 300px at top right, rgba(255,255,255,0.15), transparent),
+    linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
 }
 
 header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 header p {
-    font-size: 16px;
-    opacity: 0.9;
-    font-weight: 400;
+  font-size: 16px;
+  opacity: 0.9;
 }
 
+/* ======================================================
+   MAIN
+====================================================== */
 main {
-    max-width: 820px;
-    margin: 0 auto;
-    padding: 40px;
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 48px 40px;
 }
-
-.screen > * + * {
-    margin-top: 24px;
-}
-
-
-@media (max-width: 600px) {
-    main { padding: 20px; }
-    header { padding: 24px; }
-}
-
-/* =====================
-   Screens
-===================== */
 
 .screen {
-    display: none;
-    animation: slideUp 0.3s ease-out;
+  display: none;
+  animation: slideUp 0.35s ease;
 }
 
 .screen.active {
-    display: block;
+  display: block;
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* =====================
-   Typography & Inputs
-===================== */
-
+/* ======================================================
+   TYPOGRAPHY
+====================================================== */
 h2 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-bottom: 24px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--border-light);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
 }
 
 .helper-text {
-    color: var(--text-muted);
-    margin-top: -16px;
-    text-align: center;
-    margin-bottom: 24px;
-    font-size: 14px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
 }
 
+/* ======================================================
+   INPUTS
+====================================================== */
 label {
-    display: block;
-    margin-top: 20px;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
 }
 
 input[type="number"] {
-    width: 100%;
-    padding: 12px 16px;
-    border-radius: 8px;
-    border: 1px solid var(--border-light);
-    font-size: 16px;
-    transition: all 0.2s;
-    background: #f9fafb;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  background: white;
+  font-size: 16px;
+  transition: 0.25s;
 }
 
-input[type="number"]:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
-    background: white;
+input:focus {
+  outline: none;
+  box-shadow: var(--shadow-glow);
+  border-color: var(--primary);
 }
 
-/* =====================
-   Buttons
-===================== */
-
-button {
-    font-family: inherit;
-}
-
+/* ======================================================
+   BUTTONS (JUICY)
+====================================================== */
 .gender-buttons,
 .question-buttons,
 .button-group {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  gap: 14px;
 }
 
-
-/* Option Buttons (Male/Female/Yes/No) */
 .gender-buttons button,
 .question-buttons button {
-    flex: 1;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border-light);
-    background: white;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text-main);
-    transition: all 0.2s ease;
+  flex: 1;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border-light);
+  background: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
 }
 
-.gender-buttons button:hover,
-.question-buttons button:hover {
-    border-color: var(--primary);
-    background: var(--primary-light);
-    color: var(--primary-hover);
+.gender-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
-.gender-buttons button.active,
-.question-buttons button.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    box-shadow: var(--shadow-sm);
+.gender-buttons button.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+  border: none;
 }
 
-/* Primary Action Buttons */
+/* Primary CTA */
 .btn-primary {
-    display: inline-block;
-    width: 100%;
-    margin-top: 32px;
-    padding: 14px 24px;
-    border-radius: 8px;
-    border: none;
-    background: var(--primary);
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    box-shadow: var(--shadow-sm);
+  width: 100%;
+  margin-top: 36px;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: var(--shadow-sm);
 }
 
-.btn-primary:hover:not(:disabled) {
-    background: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: var(--shadow-md);
 }
 
-.btn-primary:active:not(:disabled) {
-    transform: translateY(0);
+/* ======================================================
+   BODY MAP (INTERACTIVE)
+====================================================== */
+.body-map {
+  max-width: 260px;           /* 👈 controls overall size */
+  width: 100%;
 }
-
-.btn-primary:disabled {
-    background: #cbd5e1;
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-/* Secondary / Back Buttons */
-.btn-secondary {
-    padding: 14px 24px;
-    border-radius: 8px;
-    border: 1px solid var(--border-light);
-    background: white;
-    color: var(--text-main);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-secondary:hover {
-    background: #f3f4f6;
-    border-color: #d1d5db;
-}
-
-/* Outline Button (Start Over) */
-.btn-outline {
-    width: 100%;
-    margin-top: 20px;
-    padding: 14px;
-    background: transparent;
-    border: 1px solid var(--border-light);
-    border-radius: 8px;
-    color: var(--text-muted);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-outline:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: var(--primary-light);
-}
-
-/* =====================
-   Question Box
-===================== */
-
-.question {
-    margin-top: 32px;
-    padding: 24px;
-    background: #f8fafc;
-    border-radius: 12px;
-    border: 1px solid var(--border-light);
-}
-
-.question p {
-    font-weight: 600;
-    margin-bottom: 12px;
-}
-
-/* =====================
-   Body Map
-===================== */
 
 .body-map-wrapper {
-    display: flex;
-    gap: 32px;
-    justify-content: center;
-    margin: 20px 0;
-}
-
-.body-map {
-    flex: 1;
-    max-width: 300px;
-}
-
-.body-map h3 {
-    text-align: center;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    margin-bottom: 12px;
+  display: flex;
+  gap: 36px;
+  justify-content: center;
+  margin: 32px 0;
 }
 
 .body-map-container {
-    position: relative;
-    width: 100%;
-    padding-bottom: 200%; /* Aspect ratio for the body image */
-    background: white;
-    border-radius: 12px;
-    border: 1px solid var(--border-light);
-    overflow: hidden;
+aspect-ratio: 1 / 2;        /* human body ratio */
+  height: auto;
+  max-height: 520px;          /* 👈 hard cap */
+  padding-bottom: 0;          /* REMOVE 200% hack */
+  position: relative;
+  border-radius: 20px;
+  background: white;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
-
 .body-map-container img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 10px;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
-/* Regions */
+
+.region {
+  position: absolute;
+  cursor: pointer;
+}
+
+.region:hover::after,
+.region.selected::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(13,148,136,0.35), rgba(13,148,136,0.15));
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+/* ======================================================
+   BODY REGIONS — PREMIUM INTERACTION
+====================================================== */
+
+/* Base region */
 .region {
     position: absolute;
     cursor: pointer;
     z-index: 10;
-    /* Debug border: border: 1px solid rgba(255,0,0,0.2); */
+    border-radius: inherit;
+    transition:
+        transform 0.25s ease,
+        filter 0.25s ease;
 }
 
-/* Region Hover Effect */
-.region:hover::after {
+/* Hover glow (soft, medical, not neon) */
+.region::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(13, 148, 136, 0.15); /* Primary color low opacity */
     border-radius: inherit;
-    box-shadow: 0 0 0 2px var(--primary);
+    background: radial-gradient(
+        circle at center,
+        rgba(13,148,136,0.35),
+        rgba(13,148,136,0.15),
+        transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+/* Hover state */
+.region:hover {
+    transform: scale(1.03);
+    filter: brightness(1.05);
+}
+
+.region:hover::after {
+    opacity: 1;
+}
+
+/* Selected = confident + calm */
+.region.selected {
+    transform: scale(1.05);
+    z-index: 20;
 }
 
 .region.selected::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(13, 148, 136, 0.25);
-    border-radius: inherit;
-    box-shadow: 0 0 0 3px var(--primary-hover);
+    opacity: 1;
+    background: radial-gradient(
+        circle at center,
+        rgba(13,148,136,0.45),
+        rgba(13,148,136,0.25),
+        transparent 75%
+    );
+    box-shadow:
+        inset 0 0 0 2px var(--primary),
+        0 0 20px rgba(13,148,136,0.35);
 }
 
-/* Tooltip Labels */
+/* ======================================================
+   BODY REGION LABELS (CLEAN AF)
+====================================================== */
+
 .region-label {
     position: absolute;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    background: rgba(17, 24, 39, 0.9);
+    top: 50%;
+    transform: translate(-50%, -60%) scale(0.9);
+    background: rgba(15,23,42,0.92);
+    backdrop-filter: blur(6px);
     color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
     white-space: nowrap;
 }
 
-.region:hover .region-label {
+/* Label reveal */
+.region:hover .region-label,
+.region.selected .region-label {
     opacity: 1;
     transform: translate(-50%, -120%) scale(1);
 }
 
-.selection-display {
-    text-align: center;
-    font-weight: 600;
-    color: var(--primary);
-    margin-bottom: 24px;
-    height: 24px;
+/* ======================================================
+   BODY MAP CONTAINER — DEPTH
+====================================================== */
+
+.body-map-container {
+    position: relative;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(13,148,136,0.04),
+            transparent 65%
+        ),
+        white;
+    box-shadow:
+        inset 0 0 0 1px rgba(15,23,42,0.06),
+        0 10px 30px rgba(0,0,0,0.08);
 }
 
-/* Region Positioning (Kept mostly same, added border-radius for cleaner hitboxes) */
-/* FRONT */
-.head { top: 5%; left: 35%; width: 30%; height: 14%; border-radius: 50%; }
-.chest { top: 20%; left: 28%; width: 44%; height: 16%; border-radius: 20%; }
-.abdomen { top: 37%; left: 30%; width: 40%; height: 15%; border-radius: 20%; }
-.left-arm { top: 24%; left: 8%; width: 18%; height: 28%; border-radius: 20px; transform: rotate(32deg); }
-.right-arm { top: 24%; right: 8%; width: 18%; height: 28%; border-radius: 20px; transform: rotate(-32deg); }
-.left-leg { top: 52%; left: 25%; width: 20%; height: 40%; border-radius: 10px; }
-.right-leg { top: 52%; right: 25%; width: 20%; height: 40%; border-radius: 10px; }
+/* ======================================================
+   OPTIONAL: SEVERITY-AWARE BODY REGIONS
+   (future-proof, won’t break anything)
+====================================================== */
 
-/* BACK */
-.back-head { top: 5%; left: 35%; width: 30%; height: 14%; border-radius: 50%; }
-.upper-back { top: 20%; left: 28%; width: 44%; height: 18%; border-radius: 20%; }
-.lower-back { top: 39%; left: 30%; width: 40%; height: 14%; border-radius: 20%; }
-.back-left-arm { top: 24%; left: 8%; width: 18%; height: 28%; border-radius: 20px; transform: rotate(32deg); }
-.back-right-arm { top: 24%; right: 8%; width: 18%; height: 28%; border-radius: 20px; transform: rotate(-32deg); }
-.back-left-leg { top: 52%; left: 25%; width: 20%; height: 40%; border-radius: 10px; }
-.back-right-leg { top: 52%; right: 25%; width: 20%; height: 40%; border-radius: 10px; }
+.region[data-sev="0"].selected::after { box-shadow: 0 0 20px rgba(22,163,74,0.5); }
+.region[data-sev="1"].selected::after { box-shadow: 0 0 22px rgba(132,204,22,0.5); }
+.region[data-sev="2"].selected::after { box-shadow: 0 0 24px rgba(250,204,21,0.5); }
+.region[data-sev="3"].selected::after { box-shadow: 0 0 26px rgba(251,146,60,0.55); }
+.region[data-sev="4"].selected::after { box-shadow: 0 0 30px rgba(239,68,68,0.6); }
 
-
-/* =====================
-   Symptoms & Severity
-===================== */
-
-.symptom-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.symptom-item {
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border-light);
-    background: white;
-    transition: border-color 0.2s;
-}
-
-.symptom-item:hover {
-    border-color: #cbd5e1;
-}
-
-.symptom-item.has-severity {
-    background: var(--primary-light);
-    border-color: var(--primary-border);
-}
-
-.symptom-name {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    display: block;
-}
-
-/* FIXED SEVERITY SCALE */
+/* ======================================================
+   SEVERITY (EMOTIONAL)
+====================================================== */
 .severity-scale {
-    display: flex;
-    gap: 8px; /* Proper spacing instead of margin-right */
-    justify-content: space-between;
+  display: flex;
+  gap: 10px;
 }
 
 .severity-option {
-    flex: 1;
-    padding: 10px 0;
-    text-align: center;
-    border-radius: 8px;
-    border: 1px solid var(--border-light);
-    background: white;
-    font-size: 14px; /* Fixed font size */
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--text-muted);
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border-light);
+  background: white;
+  transition: 0.25s;
 }
 
-.severity-option:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: white;
-}
+.severity-option.selected[data-sev="0"] { background: var(--sev-0); color: white; }
+.severity-option.selected[data-sev="1"] { background: var(--sev-1); }
+.severity-option.selected[data-sev="2"] { background: var(--sev-2); }
+.severity-option.selected[data-sev="3"] { background: var(--sev-3); color: white; }
+.severity-option.selected[data-sev="4"] { background: var(--sev-4); color: white; }
 
-.severity-option.selected {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    box-shadow: 0 2px 4px rgba(13, 148, 136, 0.3);
-}
-
-.severity-option[data-sev="0"].selected {
-  background: var(--sev-0);
-  border-color: var(--sev-0);
-  color: white;
-}
-
-.severity-option[data-sev="1"].selected {
-  background: var(--sev-1);
-  border-color: var(--sev-1);
-  color: #1f2937;
-}
-
-.severity-option[data-sev="2"].selected {
-  background: var(--sev-2);
-  border-color: var(--sev-2);
-  color: #1f2937;
-}
-
-.severity-option[data-sev="3"].selected {
-  background: var(--sev-3);
-  border-color: var(--sev-3);
-  color: white;
-}
-
-.severity-option[data-sev="4"].selected {
-  background: var(--sev-4);
-  border-color: var(--sev-4);
-  color: white;
-}
-
-/* =====================
-   Summary / Results
-===================== */
-
-.summary-box {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    background: #f8fafc;
-    border: 1px solid var(--border-light);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 32px;
-}
-
-.summary-item {
-    flex: 1 1 40%; /* 2 columns */
-    font-size: 14px;
-    color: var(--text-main);
-}
-
-.summary-item.full-width {
-    flex: 1 1 100%;
-    border-top: 1px dashed var(--border-light);
-    padding-top: 10px;
-    margin-top: 4px;
-}
-
-.summary-item span {
-    color: var(--text-muted);
-}
-
-.results-container {
-    /* No trailing brace here! */
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-/* Result Cards */
+/* ======================================================
+   RESULTS (CARDY + CLEAN)
+====================================================== */
 .diagnostic-card {
-    padding: 20px;
-    border-radius: 10px;
-    background: white;
-    border: 1px solid var(--border-light);
-    border-left: 5px solid #cbd5e1;
-    box-shadow: var(--shadow-sm);
-}
-
-.diagnostic-card h4 {
-    margin-bottom: 6px;
-    font-size: 18px;
+  padding: 24px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: var(--shadow-sm);
+  border-left: 6px solid #cbd5e1;
 }
 
 .diagnostic-card.strong {
-    border-left-color: #0284c7; /* Blue */
-    background: #f0f9ff;
+  border-left-color: #0284c7;
+  background: #f0f9ff;
 }
 
 .diagnostic-card.moderate {
-    border-left-color: #f59e0b; /* Amber */
-    background: #fffbeb;
+  border-left-color: #f59e0b;
+  background: #fffbeb;
 }
 
-.diagnostic-card.low {
-    border-left-color: #64748b; /* Slate */
-    background: #f8fafc;
+/* ======================================================
+   TRANSLATE (GLASS)
+====================================================== */
+.translate-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: var(--shadow-xs);
 }
 
-/* =====================
-   Disclaimer
-===================== */
-
-.disclaimer {
-    margin-top: 32px;
-    padding: 16px;
-    border-radius: 10px;
-    background: var(--danger-bg);
-    border: 1px solid #fee2e2;
-    color: #b91c1c;
-    font-size: 13px;
-    line-height: 1.5;
+.translate-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 4px;
 }
 
-/* =====================
-   Responsive Adjustments
-===================== */
-
+/* ======================================================
+   RESPONSIVE
+====================================================== */
 @media (max-width: 768px) {
-    .body-map-wrapper {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .body-map {
-        width: 100%;
-        max-width: 260px;
-    }
-    
-    .button-group {
-        flex-direction: column;
-    }
-    
-    .button-group button {
-        width: 100%;
-    }
-    
-    .severity-option {
-        font-size: 12px;
-        padding: 8px 0;
-    }
-}
-/* ... [Existing CSS content] ... */
-
-/* ADD THIS TO THE END OF YOUR CSS FILE */
-
-/* =====================
-   Extra Region Buttons
-===================== */
-
-.extra-regions {
-    margin: 20px 0;
-    text-align: center;
+  main { padding: 28px 20px; }
+  .body-map-wrapper { flex-direction: column; }
 }
 
-.extra-regions-grid {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
+/* BODY MAP SHOULD NOT BLOCK UI BELOW */
+.body-map-container {
+  position: relative;
+  isolation: isolate; /* creates a stacking context */
 }
 
-.region-btn {
-    padding: 14px 24px;
-    background: white;
-    border: 2px solid var(--border-light);
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text-main);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-width: 180px;
-    box-shadow: var(--shadow-sm);
+/* Regions ONLY interact inside body map */
+.body-map-container .region {
+  pointer-events: auto;
 }
 
-.region-btn:hover {
-    border-color: var(--primary);
-    background: var(--primary-soft);
-    transform: translateY(-2px);
-}
-
-.region-btn.selected {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary-dark);
-    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
-}
-
-/* Fix mobile layout for extra buttons */
-@media (max-width: 600px) {
-    .extra-regions-grid {
-        flex-direction: column;
-    }
-    .region-btn {
-        width: 100%;
-    }
-}
+/* Prevent invisible overlays from blocking clicks */
 .body-map-wrapper {
-    align-items: flex-start;
+  position: relative;
+  z-index: 1;
 }
 
-.summary-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+/* Ensure questions & inputs are always clickable */
+.question,
+.question-buttons,
+.button-group,
+input,
+button {
+  position: relative;
+  z-index: 5;
+}
+.question-buttons button {
+  backdrop-filter: blur(6px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.question-buttons button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+/* ======================================================
+   QUESTION BUTTONS — ACTIVE STATE (FIX)
+====================================================== */
+
+.question-buttons button.active {
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-hover)
+  );
+  color: white;
+  border: none;
+  box-shadow:
+    0 8px 20px rgba(13,148,136,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+
+/* Optional: stronger focus feedback */
+.question-buttons button.active:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* ======================================================
+   BODY PART REGION POSITIONS (RESTORED)
+====================================================== */
+
+/* FRONT */
+.region.head {
+  top: 5%;
+  left: 35%;
+  width: 30%;
+  height: 14%;
+  border-radius: 50%;
+}
+
+.region.chest {
+  top: 20%;
+  left: 28%;
+  width: 44%;
+  height: 16%;
+  border-radius: 22%;
+}
+
+.region.abdomen {
+  top: 37%;
+  left: 30%;
+  width: 40%;
+  height: 15%;
+  border-radius: 22%;
+}
+
+.region.left-arm {
+  top: 24%;
+  left: 6%;
+  width: 18%;
+  height: 30%;
+  border-radius: 24px;
+  transform: rotate(30deg);
+}
+
+.region.right-arm {
+  top: 24%;
+  right: 6%;
+  width: 18%;
+  height: 30%;
+  border-radius: 24px;
+  transform: rotate(-30deg);
+}
+
+.region.left-leg {
+  top: 54%;
+  left: 26%;
+  width: 18%;
+  height: 38%;
+  border-radius: 18px;
+}
+
+.region.right-leg {
+  top: 54%;
+  right: 26%;
+  width: 18%;
+  height: 38%;
+  border-radius: 18px;
+}
+
+/* BACK */
+.region.back-head {
+  top: 5%;
+  left: 35%;
+  width: 30%;
+  height: 14%;
+  border-radius: 50%;
+}
+
+.region.upper-back {
+  top: 20%;
+  left: 28%;
+  width: 44%;
+  height: 18%;
+  border-radius: 22%;
+}
+
+.region.lower-back {
+  top: 39%;
+  left: 30%;
+  width: 40%;
+  height: 14%;
+  border-radius: 22%;
+}
+
+.region.back-left-arm {
+  top: 24%;
+  left: 6%;
+  width: 18%;
+  height: 30%;
+  border-radius: 24px;
+  transform: rotate(30deg);
+}
+
+.region.back-right-arm {
+  top: 24%;
+  right: 6%;
+  width: 18%;
+  height: 30%;
+  border-radius: 24px;
+  transform: rotate(-30deg);
+}
+
+.region.back-left-leg {
+  top: 54%;
+  left: 26%;
+  width: 18%;
+  height: 38%;
+  border-radius: 18px;
+}
+
+.region.back-right-leg {
+  top: 54%;
+  right: 26%;
+  width: 18%;
+  height: 38%;
+  border-radius: 18px;
+}
+/* ===== BODY MAP SECTION ALIGNMENT FIX ===== */
+
+.body-map-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 280px));
+  justify-content: center;
+  align-items: start;
+  gap: 32px;
+  margin: 40px auto;
+  max-width: 650px;   /* 👈 prevents right-side emptiness */
+}
+.body-map {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.body-map h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.body-map-container {
+  width: 100%;
+  aspect-ratio: 1 / 2;
+  max-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* ===== BODY MAP SIZE + ALIGNMENT (UPGRADED) ===== */
+
+.body-map-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(320px, 380px));
+  justify-content: center;
+  align-items: start;
+  gap: 48px;
+  margin: 48px auto;
+  max-width: 900px;
+}
+
+.body-map {
+  width: 100%;
+  max-width: 380px;   /* 🔥 BIGGER, CONFIDENT */
+}
+.body-map-container {
+  aspect-ratio: 1 / 2;
+  max-height: 640px;   /* 🔥 taller body */
+  width: 100%;
+  border-radius: 24px;
+}
+/* ===== PRIMARY CTA — BOSS MODE ===== */
+
+.btn-primary {
+  height: 56px;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-hover)
+  );
+  box-shadow:
+    0 16px 36px rgba(13,148,136,0.45);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    0 22px 44px rgba(13,148,136,0.55);
+}
+.btn-secondary {
+  border: 2px solid var(--border-light);
+  font-weight: 700;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.btn-secondary:hover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+/* ===== QUESTION BUTTONS — RESTORE PRIDE ===== */
+
+.question-buttons button {
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    #f8fafc
+  );
+  border: 2px solid var(--border-light);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.06);
+}
+
+.question-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 22px rgba(0,0,0,0.12);
+}
+
+.question-buttons button.active {
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-hover)
+  );
+  color: white;
+  border-color: transparent;
+  box-shadow:
+    0 12px 28px rgba(13,148,136,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.25);
+}
+@media (max-width: 768px) {
+  .body-map-wrapper {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .body-map {
+    max-width: 320px;
+  }
+}
+/* ======================================================
+   🔒 FINAL OVERRIDES — SINGLE SOURCE OF TRUTH
+====================================================== */
+
+/* ===== BODY MAP LAYOUT ===== */
+.body-map-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(320px, 380px));
+  justify-content: center;
+  align-items: start;
+  gap: 48px;
+  margin: 48px auto;
+  max-width: 900px;
+}
+
+.body-map {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.body-map h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ===== BODY MAP CARD ===== */
+.body-map-container {
+  width: 100%;
+  aspect-ratio: 1 / 2;
+  max-height: 640px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== BODY IMAGE ===== */
+.body-map-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* ===== BODY REGIONS ===== */
+.body-map-container .region {
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* ===== QUESTION BUTTONS (FINAL) ===== */
+.question-buttons button {
+  padding: 14px;
+  border-radius: 16px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border: 2px solid var(--border-light);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.question-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.14);
+}
+
+.question-buttons button.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+  border-color: transparent;
+  box-shadow:
+    0 14px 32px rgba(13,148,136,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.25);
+}
+
+/* ===== PRIMARY CTA (FINAL) ===== */
+.btn-primary {
+  height: 56px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 18px 40px rgba(13,148,136,0.45);
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .body-map-wrapper {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .body-map {
+    max-width: 320px;
+  }
 }
