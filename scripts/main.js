@@ -4,17 +4,17 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("App Initialized");
 });
 
-// 1. Helper: Get Icon based on condition name
+// 1. Helper: Get Icon based on condition name (Using Boxicons)
 function getIconForCondition(name) {
     const n = name.toLowerCase();
-    if (n.includes("heart") || n.includes("cardio")) return "❤️";
-    if (n.includes("stomach") || n.includes("abdominal") || n.includes("digest") || n.includes("ulcer")) return "🤢";
-    if (n.includes("head") || n.includes("migraine")) return "🧠";
-    if (n.includes("lung") || n.includes("breath") || n.includes("cough")) return "🫁";
-    if (n.includes("skin") || n.includes("rash") || n.includes("allergy")) return "🤒";
-    if (n.includes("joint") || n.includes("knee") || n.includes("arthr")) return "🦴";
-    if (n.includes("infection") || n.includes("viral") || n.includes("urinary")) return "🦠";
-    return "🩺"; // Default Stethoscope
+    if (n.includes("heart") || n.includes("cardio")) return "<i class='bx bxs-heart'></i>";
+    if (n.includes("stomach") || n.includes("abdominal") || n.includes("digest") || n.includes("ulcer")) return "<i class='bx bxs-capsule'></i>";
+    if (n.includes("head") || n.includes("migraine")) return "<i class='bx bxs-brain'></i>";
+    if (n.includes("lung") || n.includes("breath") || n.includes("cough")) return "<i class='bx bx-wind'></i>";
+    if (n.includes("skin") || n.includes("rash") || n.includes("allergy")) return "<i class='bx bxs-band-aid'></i>";
+    if (n.includes("joint") || n.includes("knee") || n.includes("arthr")) return "<i class='bx bxs-bone'></i>";
+    if (n.includes("infection") || n.includes("viral") || n.includes("urinary")) return "<i class='bx bxs-virus'></i>";
+    return "<i class='bx bxs-plus-medical'></i>"; // Default
 }
 
 // 2. Main Function: Display Results Cards
@@ -25,24 +25,22 @@ function displayResults(predictions) {
     if (!predictions || predictions.length === 0) {
         container.innerHTML = `
             <div style="text-align:center; padding:40px; color:#64748b;">
+                <i class='bx bx-search-alt' style="font-size:48px; margin-bottom:10px;"></i>
                 <h3>No clear match found</h3>
                 <p>Try adding more symptoms or selecting different regions.</p>
             </div>`;
         return;
     }
 
-    // Sort by confidence (highest first) just in case
+    // Sort by confidence (highest first)
     predictions.sort((a, b) => b.confidence - a.confidence);
 
     // Limit to top 5 results
     predictions.slice(0, 5).forEach((pred, index) => {
-        // Handle Confidence: Backend might send 0.14 or 14.0
-        // We normalize it to a 0-100 scale for display
         let rawScore = pred.confidence;
         if (rawScore <= 1) rawScore = rawScore * 100;
         const percentage = rawScore.toFixed(1);
         
-        // Determine Acute/Chronic Badge
         const typeClass = appState.severe === "Yes" ? "type-acute" : "type-chronic";
         const typeLabel = appState.severe === "Yes" ? "Acute" : "Chronic";
 
@@ -51,7 +49,7 @@ function displayResults(predictions) {
         const card = document.createElement("div");
         card.className = "result-card";
         
-        // Animation: Staggered fade in
+        // Animation
         card.style.animation = `fadeIn 0.5s ease forwards ${index * 0.1}s`;
         card.style.opacity = "0"; 
 
@@ -81,64 +79,29 @@ function displayResults(predictions) {
     });
 }
 
-// 3. Update Summary Header (With Icons)
+// 3. Update Summary Header (With Boxicons)
 function updateSummaryDisplay() {
-    // Icons (Using SVGs for cleaner look)
-    const icons = {
-        age: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>',
-        sex: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2v20"/><path d="M2 12h20"/></svg>',
-        duration: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-        regions: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 18l-2 -1l-6 3v-13l6 -3l6 3l6 -3v7.5" /><path d="M9 4v13" /><path d="M15 7v5" /><circle cx="16.5" cy="17.5" r="2.5" /><path d="M18.5 19.5l2.5 2.5" /></svg>'
-    };
-
     const count = Object.keys(appState.symptomSeverities).length;
     
-    // Inject HTML into summary items
-    const elAge = document.getElementById('sum-age');
-    if(elAge) {
-        elAge.parentElement.innerHTML = `
-            <div class="summary-item">
-                <div class="summary-icon">${icons.age}</div>
-                <div class="summary-text">
-                    <strong>${appState.age} Years</strong>
-                    <span>Age</span>
-                </div>
-            </div>`;
-    }
+    // Helper to generate summary item HTML
+    const createSummaryItem = (iconClass, value, label) => `
+        <div class="summary-item">
+            <div class="summary-icon"><i class='bx ${iconClass}'></i></div>
+            <div class="summary-text">
+                <strong>${value}</strong>
+                <span>${label}</span>
+            </div>
+        </div>`;
 
-    const elGender = document.getElementById('sum-gender');
-    if(elGender) {
-        elGender.parentElement.innerHTML = `
-            <div class="summary-item">
-                <div class="summary-icon">${icons.sex}</div>
-                <div class="summary-text">
-                    <strong>${appState.gender}</strong>
-                    <span>Sex</span>
-                </div>
-            </div>`;
-    }
+    const elAgeBox = document.getElementById('sum-age-box');
+    if(elAgeBox) elAgeBox.innerHTML = createSummaryItem('bx-calendar', `${appState.age} Years`, 'Age');
 
-    const elSevere = document.getElementById('sum-severe');
-    if(elSevere) {
-        elSevere.parentElement.innerHTML = `
-            <div class="summary-item">
-                <div class="summary-icon">${icons.duration}</div>
-                <div class="summary-text">
-                    <strong>${appState.severe === 'Yes' ? '> 10 Days' : '< 10 Days'}</strong>
-                    <span>Duration</span>
-                </div>
-            </div>`;
-    }
+    const elGenderBox = document.getElementById('sum-gender-box');
+    if(elGenderBox) elGenderBox.innerHTML = createSummaryItem('bx-male-female', appState.gender, 'Sex');
 
-    const elCount = document.getElementById('sum-regions-count');
-    if(elCount) {
-        elCount.parentElement.innerHTML = `
-            <div class="summary-item">
-                <div class="summary-icon">${icons.regions}</div>
-                <div class="summary-text">
-                    <strong>${count} Areas</strong>
-                    <span>Affected Regions</span>
-                </div>
-            </div>`;
-    }
+    const elDurationBox = document.getElementById('sum-duration-box');
+    if(elDurationBox) elDurationBox.innerHTML = createSummaryItem('bx-time', appState.severe === 'Yes' ? '> 10 Days' : '< 10 Days', 'Duration');
+
+    const elRegionsBox = document.getElementById('sum-regions-box');
+    if(elRegionsBox) elRegionsBox.innerHTML = createSummaryItem('bx-map-pin', `${count} Areas`, 'Affected Regions');
 }
