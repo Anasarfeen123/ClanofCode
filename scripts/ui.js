@@ -1,4 +1,5 @@
 // scripts/ui.js
+
 function goToScreen(n) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById(`screen-${n}`);
@@ -23,14 +24,11 @@ function selectGender(gender) {
 }
 
 function answerSevere(value) {
-  // save state
   appState.severe = value;
   
-  // clear active state from all buttons
   const buttons = document.querySelectorAll('.question-buttons button');
   buttons.forEach(b => b.classList.remove('active'));
   
-  // activate clicked button - find by checking textContent
   buttons.forEach(b => {
     if ((value === 'Yes' && b.textContent.includes('More than')) ||
         (value === 'No' && b.textContent.includes('Less than'))) {
@@ -52,29 +50,21 @@ function goToBodyMap() {
 function selectRegion(region, el) {
   appState.selectedRegion = region;
   
-  // 1. Clear previous selections on MAP regions
   document.querySelectorAll('.region').forEach(r => r.classList.remove('selected'));
-  
-  // 2. Clear previous selections on EXTRA buttons
   document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('selected'));
   
-  // 3. Apply selection to clicked element
   if (el.classList.contains('region')) {
     el.classList.add('selected');
   } else if (el.classList.contains('region-btn')) {
     el.classList.add('selected');
   } else {
-    // Check if clicked inner element of a region div
     if(el.closest('.region')) el.closest('.region').classList.add('selected');
-    // Check if clicked inner element of a button
     if(el.closest('.region-btn')) el.closest('.region-btn').classList.add('selected');
   }
   
-  // Update text
   const disp = document.getElementById('selected-region');
   if(disp) disp.textContent = "Selected: " + region;
   
-  // Update Buttons
   const addBtn = document.getElementById('add-symptoms-btn');
   if(addBtn) {
     addBtn.disabled = false;
@@ -94,7 +84,6 @@ function goToSymptoms() {
 
 function saveRegionAndReturn() {
   goToScreen(2);
-  // Reset the "Add Symptoms" button style
   const addBtn = document.getElementById('add-symptoms-btn');
   if(addBtn) {
     addBtn.classList.remove('btn-primary');
@@ -106,7 +95,6 @@ function saveRegionAndReturn() {
 async function triggerDiagnosis() {
   let hasSymptoms = false;
   
-  // Check if any symptoms exist in state
   for(let reg in appState.symptomSeverities) {
     for(let sym in appState.symptomSeverities[reg]) {
       if(appState.symptomSeverities[reg][sym] > 0) hasSymptoms = true;
@@ -125,8 +113,15 @@ async function triggerDiagnosis() {
   
   try {
     const predictions = await getDiagnosis(appState);
-    displayResults(predictions);
-    updateSummaryDisplay();
+    
+    // These functions exist in main.js, which is loaded AFTER ui.js
+    if (typeof displayResults === "function") {
+        displayResults(predictions);
+    }
+    if (typeof updateSummaryDisplay === "function") {
+        updateSummaryDisplay();
+    }
+    
     goToScreen(4);
   } catch(e) {
     console.error(e);
@@ -135,15 +130,6 @@ async function triggerDiagnosis() {
     btn.textContent = oldText;
     btn.disabled = false;
   }
-}
-
-function updateSummaryDisplay() {
-  document.getElementById('sum-age').textContent = appState.age;
-  document.getElementById('sum-gender').textContent = appState.gender;
-  document.getElementById('sum-severe').textContent = appState.severe;
-  
-  const regionsCount = Object.keys(appState.symptomSeverities).length;
-  document.getElementById('sum-regions-count').textContent = regionsCount > 0 ? `${regionsCount} regions affected` : "None";
 }
 
 function restart() {
