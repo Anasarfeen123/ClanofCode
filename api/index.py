@@ -1,49 +1,42 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, validator
+from contextlib import asynccontextmanager
+from typing import Dict, List, Optional
 import joblib
 import os
-from fastapi.middleware.cors import CORSMiddleware
 import logging
+import time
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# ==========================================
+# 1. Configuration & Logging
+# ==========================================
 
-# Initialize FastAPI
-app = FastAPI(
-    title="Symptom Disease Predictor",
-    description="AI-powered symptom analysis API",
-    version="1.0.0"
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO
 )
+logger = logging.getLogger("symptom-predictor")
 
-# CORS Configuration
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+class Settings:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    MODEL_DIR = os.path.join(BASE_DIR, "model")
+    MIN_CONFIDENCE = 0.01
+    MAX_RESULTS = 5
+    ACUTE_MODEL_PATH = os.path.join(MODEL_DIR, "acute_model.joblib")
+    CHRONIC_MODEL_PATH = os.path.join(MODEL_DIR, "chronic_model.joblib")
+    METADATA_PATH = os.path.join(MODEL_DIR, "feature_metadata.joblib")
 
-# Model paths
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.path.join(BASE_DIR, "model")
+settings = Settings()
 
-# Global model variables
-acute_model = None
-chronic_model = None
-metadata = {}
-acute_features = []
-chronic_features = []
-
-# Configuration
-MIN_CONFIDENCE = 0.01
-MAX_RESULTS = 5
+# ==========================================
+# 2. Data Models (Schemas)
+# ==========================================
 
 class SymptomRequest(BaseModel):
-    symptoms: dict[str, int] = Field(..., description="Symptom severity mapping")
-    type: str = Field(..., description="Analysis type: acute, chronic, or not_sure")
+    symptoms: Dict[str, int] = Field(..., description="Symptom severity mapping (symptom_name: severity_0_to_4)")
+    type: str = Field(..., description="Analysis type: 'acute', 'chronic', or 'not_sure'")
     
     @validator('type')
     def validate_type(cls, v):
@@ -56,168 +49,213 @@ class SymptomRequest(BaseModel):
         if not v:
             raise ValueError('At least one symptom must be provided')
         for symptom, severity in v.items():
-            if not isinstance(severity, int) or severity < 0 or severity > 4:
-                raise ValueError(f'Invalid severity for {symptom}: must be 0-4')
+            if not isinstance(severity, int) or not (0 <= severity <= 4):
+                raise ValueError(f'Invalid severity for {symptom}: must be integer 0-4')
         return v
 
+class PredictionResult(BaseModel):
+    condition: str
+    confidence: float
+    model: str
+
 class PredictionResponse(BaseModel):
-    predictions: list[dict]
+    predictions: List[PredictionResult]
     message: str = ""
 
-def load_models():
-    """Load ML models on startup"""
-    global acute_model, chronic_model, metadata, acute_features, chronic_features
+# ==========================================
+# 3. Application Lifecycle & State
+# ==========================================
+
+def load_ml_resources(app: FastAPI):
+    """Load ML models and metadata into app state."""
+    logger.info("Loading ML models...")
+    app.state.models = {}
+    app.state.features = {}
     
+    files_exist = all(os.path.exists(p) for p in [
+        settings.ACUTE_MODEL_PATH, 
+        settings.CHRONIC_MODEL_PATH, 
+        settings.METADATA_PATH
+    ])
+
+    if not files_exist:
+        logger.error(f"Model files missing in {settings.MODEL_DIR}")
+        return
+
     try:
-        acute_path = os.path.join(MODEL_DIR, "acute_model.joblib")
-        chronic_path = os.path.join(MODEL_DIR, "chronic_model.joblib")
-        metadata_path = os.path.join(MODEL_DIR, "feature_metadata.joblib")
+        app.state.models["acute"] = joblib.load(settings.ACUTE_MODEL_PATH)
+        app.state.models["chronic"] = joblib.load(settings.CHRONIC_MODEL_PATH)
         
-        if not all(os.path.exists(p) for p in [acute_path, chronic_path, metadata_path]):
-            logger.error("Model files not found")
-            return False
-        
-        acute_model = joblib.load(acute_path)
-        chronic_model = joblib.load(chronic_path)
-        metadata = joblib.load(metadata_path)
-        
-        acute_features = metadata.get("acute_features", [])
-        chronic_features = metadata.get("chronic_features", [])
-        
-        logger.info(f"Models loaded successfully")
-        logger.info(f"Acute features: {len(acute_features)}, Chronic features: {len(chronic_features)}")
-        return True
-        
+        metadata = joblib.load(settings.METADATA_PATH)
+        app.state.features["acute"] = metadata.get("acute_features", [])
+        app.state.features["chronic"] = metadata.get("chronic_features", [])
+
+        logger.info("Models loaded successfully.")
+        logger.info(f"Features - Acute: {len(app.state.features['acute'])}, Chronic: {len(app.state.features['chronic'])}")
     except Exception as e:
-        logger.error(f"Error loading models: {e}")
-        return False
+        logger.error(f"Failed to load models: {e}")
 
-@app.on_event("startup")
-async def startup_event():
-    """Initialize models on startup"""
-    success = load_models()
-    if not success:
-        logger.warning("Application started without models")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup logic
+    load_ml_resources(app)
+    yield
+    # Shutdown logic (cleanup if needed)
+    app.state.models.clear()
 
-@app.get("/")
-async def root():
-    """Health check endpoint"""
-    models_loaded = acute_model is not None and chronic_model is not None
-    return {
-        "status": "running",
-        "models_loaded": models_loaded,
-        "version": "1.0.0"
-    }
+# ==========================================
+# 4. App Initialization
+# ==========================================
 
-@app.get("/api/health")
-async def health_check():
-    """Detailed health check"""
-    return {
-        "status": "healthy",
-        "acute_model_loaded": acute_model is not None,
-        "chronic_model_loaded": chronic_model is not None,
-        "acute_features_count": len(acute_features),
-        "chronic_features_count": len(chronic_features)
-    }
+app = FastAPI(
+    title="Symptom Disease Predictor",
+    description="AI-powered symptom analysis API",
+    version="1.1.0",
+    lifespan=lifespan
+)
 
-def build_input_vector(symptoms: dict, features: list) -> list:
-    """Convert symptom dict to model input vector"""
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ==========================================
+# 5. Prediction Logic
+# ==========================================
+
+def build_input_vector(symptoms: Dict[str, int], features: List[str]) -> List[List[int]]:
+    """
+    Convert symptom dict to model input vector.
+    Logic: Checks if symptom is present (>0) in the input dictionary.
+    """
+    # Note: This aligns with features matching exact keys. 
+    # Ensure frontend sends keys that match trained features.
     return [[1 if symptoms.get(f, 0) > 0 else 0 for f in features]]
 
-def predict_with_model(model, symptoms: dict, features: list, model_type: str):
-    """Make prediction with a single model"""
+def run_inference(model, symptoms: Dict[str, int], features: List[str], model_type: str) -> List[Dict]:
+    """Helper to run prediction on a specific model."""
     try:
         X = build_input_vector(symptoms, features)
+        # predict_proba returns array of arrays, we take the first one
         probs = model.predict_proba(X)[0]
         diseases = model.classes_
         
-        results = [
-            {
-                "condition": disease,
-                "confidence": float(prob),
-                "model": model_type
-            }
-            for disease, prob in zip(diseases, probs)
-            if prob >= MIN_CONFIDENCE
-        ]
-        
+        results = []
+        for disease, prob in zip(diseases, probs):
+            if prob >= settings.MIN_CONFIDENCE:
+                results.append({
+                    "condition": disease,
+                    "confidence": float(prob),
+                    "model": model_type
+                })
         return results
-        
     except Exception as e:
-        logger.error(f"Error in {model_type} prediction: {e}")
+        logger.error(f"Inference error ({model_type}): {e}")
         return []
 
+# ==========================================
+# 6. Endpoints
+# ==========================================
+
+@app.get("/")
+async def root(request: Request):
+    """Health check endpoint."""
+    models_loaded = (
+        request.app.state.models.get("acute") is not None and 
+        request.app.state.models.get("chronic") is not None
+    )
+    return {
+        "status": "running",
+        "models_loaded": models_loaded,
+        "version": app.version
+    }
+
+@app.get("/api/health")
+async def health_check(request: Request):
+    """Detailed health check."""
+    return {
+        "status": "healthy",
+        "acute_model_loaded": request.app.state.models.get("acute") is not None,
+        "chronic_model_loaded": request.app.state.models.get("chronic") is not None,
+        "acute_features_count": len(request.app.state.features.get("acute", [])),
+        "chronic_features_count": len(request.app.state.features.get("chronic", []))
+    }
+
 @app.post("/api/predict", response_model=PredictionResponse)
-async def predict(req: SymptomRequest):
+def predict(req: SymptomRequest, request: Request):
     """
-    Predict potential conditions based on symptoms
+    Predict potential conditions based on symptoms.
     
-    - **symptoms**: Dictionary of symptom names to severity (0-4)
-    - **type**: Analysis type (acute/chronic/not_sure)
+    NOTE: This function is defined with `def` (synchronous) instead of `async def`.
+    This tells FastAPI to run it in a thread pool, which is crucial because
+    scikit-learn predictions are CPU-bound and blocking.
     """
+    start_time = time.time()
     
-    # Check if models are loaded
+    acute_model = request.app.state.models.get("acute")
+    chronic_model = request.app.state.models.get("chronic")
+    
     if not acute_model or not chronic_model:
         raise HTTPException(
-            status_code=503,
-            detail="Models not loaded. Please contact administrator."
-        )
-    
-    # Validate we have symptoms
-    if not req.symptoms:
-        raise HTTPException(
-            status_code=400,
-            detail="No symptoms provided"
+            status_code=503, 
+            detail="Models not initialized. Contact administrator."
         )
     
     all_results = []
     
-    # Run acute model
-    if req.type in ["acute", "not_sure"] and acute_model:
-        acute_results = predict_with_model(
+    # 1. Run Acute Model
+    if req.type in ["acute", "not_sure"]:
+        results = run_inference(
             acute_model, 
             req.symptoms, 
-            acute_features, 
+            request.app.state.features.get("acute", []), 
             "acute"
         )
-        all_results.extend(acute_results)
+        all_results.extend(results)
     
-    # Run chronic model
-    if req.type in ["chronic", "not_sure"] and chronic_model:
-        chronic_results = predict_with_model(
-            chronic_model,
-            req.symptoms,
-            chronic_features,
+    # 2. Run Chronic Model
+    if req.type in ["chronic", "not_sure"]:
+        results = run_inference(
+            chronic_model, 
+            req.symptoms, 
+            request.app.state.features.get("chronic", []), 
             "chronic"
         )
-        all_results.extend(chronic_results)
+        all_results.extend(results)
     
-    # Sort by confidence and limit results
+    # 3. Post-process
+    # Sort by confidence descending
     all_results.sort(key=lambda x: x["confidence"], reverse=True)
-    top_results = all_results[:MAX_RESULTS]
     
-    # Generate message
+    # Limit results
+    top_results = all_results[:settings.MAX_RESULTS]
+    
+    # Generate user message
     message = ""
     if not top_results:
         message = "No clear matches found. Consider consulting a healthcare provider."
     elif top_results[0]["confidence"] < 0.3:
         message = "Low confidence results. Please provide more symptoms or consult a doctor."
     
-    logger.info(f"Prediction completed: {len(top_results)} results returned")
+    duration = (time.time() - start_time) * 1000
+    logger.info(f"Prediction: {len(top_results)} results in {duration:.2f}ms")
     
-    return PredictionResponse(
-        predictions=top_results,
-        message=message
-    )
+    return {
+        "predictions": top_results,
+        "message": message
+    }
 
 @app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
-    """Handle unexpected errors"""
-    logger.error(f"Unexpected error: {exc}")
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Global error handler caught: {exc}")
     return JSONResponse(
         status_code=500,
         content={
-            "detail": "An unexpected error occurred",
-            "predictions": []
+            "detail": "An internal server error occurred.",
+            "predictions": [],
+            "message": "System error. Please try again later."
         }
     )

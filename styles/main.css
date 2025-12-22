@@ -1,559 +1,418 @@
+/* =========================================
+   1. VARIABLES & RESET
+   ========================================= */
 :root {
-  /* Severity scale */
-  --sev-0: #16a34a;
-  --sev-1: #84cc16;
-  --sev-2: #facc15;
-  --sev-3: #fb923c;
-  --sev-4: #ef4444;
-
-  /* Brand */
+  /* Brand Palette */
   --primary: #0d9488;
-  --primary-hover: #0f766e;
-  --primary-soft: #f0fdfa;
-  --primary-glow: rgba(13,148,136,0.35);
+  --primary-dark: #0f766e;
+  --primary-light: #ccfbf1;
+  --primary-glow: rgba(13, 148, 136, 0.25);
 
-  /* Surfaces */
-  --bg-main: linear-gradient(180deg, #f0fdfa, #f1f5f9);
-  --card-bg: rgba(255,255,255,0.95);
+  /* Severity Colors */
+  --sev-0: #64748b; /* Gray for None */
+  --sev-1: #84cc16; /* Mild */
+  --sev-2: #eab308; /* Moderate */
+  --sev-3: #f97316; /* Severe */
+  --sev-4: #ef4444; /* Critical */
 
-  /* Text */
+  /* UI Surfaces */
+  --bg-body: #f0fdfa;
+  --bg-glass: rgba(255, 255, 255, 0.9);
+  --border-color: #e2e8f0;
+
+  /* Typography */
   --text-main: #0f172a;
   --text-muted: #64748b;
 
-  /* Borders & shadows */
-  --border-light: rgba(15,23,42,0.12);
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-sm: 0 6px 14px rgba(0,0,0,0.08);
-  --shadow-md: 0 18px 40px rgba(0,0,0,0.12);
+  /* Dimensions & Effects */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --shadow-main: 0 20px 40px -12px rgba(15, 23, 42, 0.1);
 }
 
-/* =====================================================
-   RESET & DEFAULTS
-===================================================== */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-button {
-  appearance: none;
-  -webkit-appearance: none;
-  background: transparent;
-  border: none;
-  font-family: inherit;
-  cursor: pointer;
-}
-
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--bg-main);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background: var(--bg-body);
   color: var(--text-main);
   min-height: 100vh;
-  padding: 24px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  padding: 20px;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* =====================================================
-   CONTAINER & HEADER
-===================================================== */
-.container {
-  width: 100%;
-  max-width: 1100px;
-  background: var(--card-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 28px;
-  box-shadow: var(--shadow-md);
+/* =========================================
+   2. ANIMATED BACKGROUND
+   ========================================= */
+.background-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
   overflow: hidden;
-  animation: fadeIn 0.5s ease-out;
+  pointer-events: none;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-header {
-  padding: 32px 24px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  color: #fff;
-  text-align: center;
-  position: relative;
-}
-
-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-header p { opacity: 0.9; }
-
-.translate-wrapper {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-.translate-label { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
-
-main { padding: 40px 24px; width: 100%; }
-
-/* =====================================================
-   SCREENS & INPUTS
-===================================================== */
-.screen { display: none; }
-.screen.active { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 24px; 
-  animation: slideUp 0.4s ease; 
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-input[type="number"] {
-  width: 100%;
-  padding: 14px 16px;
-  border: 2px solid var(--border-light);
-  border-radius: 12px;
-  font-size: 16px;
-  margin-bottom: 12px;
-}
-input[type="number"]:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-soft);
-}
-
-.gender-buttons, .question-buttons {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-
-.gender-buttons button, 
-.question-buttons button {
-  flex: 1;
-  padding: 12px 16px;
-  background: #fff;
-  border: 2px solid var(--border-light);
-  border-radius: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
-  transition: all 0.2s;
-}
-
-.gender-buttons button:hover, 
-.question-buttons button:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.gender-buttons button.active, 
-.question-buttons button.active {
-  background-color: var(--primary-soft);
-  border-color: var(--primary);
-  color: var(--primary-hover);
-  box-shadow: 0 4px 12px var(--primary-glow);
-  font-weight: 700;
-  transform: translateY(-1px);
-}
-
-/* =====================================================
-   BODY MAP (Fixed Size)
-===================================================== */
-.body-map-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  justify-content: center;
-  align-items: flex-start;
-  margin: 20px auto;
-}
-
-.body-map {
-  flex: 1;
-  min-width: 300px;
-  max-width: 350px;
-  text-align: center;
-}
-
-.body-map h3 { margin-bottom: 16px; font-size: 18px; color: var(--primary); }
-
-.body-map-container {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 2;
-  background: #fff;
-  border-radius: 24px;
-  box-shadow: var(--shadow-md);
-  user-select: none;
-  overflow: hidden;
-}
-
-.body-image {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.body-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-/* =====================================================
-   REGIONS - BASE STYLES
-===================================================== */
-.region {
-  position: absolute;
-  cursor: pointer;
-  z-index: 10;
-  border-radius: 50%;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Visual Overlay (Glow/Highlight) */
-.region::after {
+.background-blobs::before,
+.background-blobs::after {
   content: '';
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: rgba(13, 148, 136, 0);
-  box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
-  opacity: 0;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  pointer-events: none;
-}
-
-/* Hover State */
-.region:hover::after {
-  opacity: 1;
-  background: rgba(13, 148, 136, 0.15);
-  inset: -4px;
-}
-
-/* Selected State (The 8% Opacity + Organic Glow) */
-.region.selected::after {
-  opacity: 1;
-  background: rgba(13, 148, 136, 0.08); /* 8% Opacity */
-  filter: drop-shadow(0 0 2px rgba(13, 148, 136, 0.8)) 
-          drop-shadow(0 0 8px rgba(13, 148, 136, 0.4));
-  inset: 0; 
-  animation: selectedPulse 3s infinite ease-in-out;
-}
-
-@keyframes selectedPulse {
-  0% { 
-    filter: drop-shadow(0 0 2px rgba(13, 148, 136, 0.8)) drop-shadow(0 0 8px rgba(13, 148, 136, 0.4)); 
-    background: rgba(13, 148, 136, 0.08);
-  }
-  50% { 
-    filter: drop-shadow(0 0 4px rgba(13, 148, 136, 0.9)) drop-shadow(0 0 12px rgba(13, 148, 136, 0.6)); 
-    background: rgba(13, 148, 136, 0.15); 
-  }
-  100% { 
-    filter: drop-shadow(0 0 2px rgba(13, 148, 136, 0.8)) drop-shadow(0 0 8px rgba(13, 148, 136, 0.4)); 
-    background: rgba(13, 148, 136, 0.08);
-  }
-}
-
-/* =====================================================
-   REGIONS - SHAPES & COORDINATES
-   (Rounded Taper Logic for Arms/Legs)
-===================================================== */
-
-/* --- Front View --- */
-.region.head {
-  top: 6.5%; left: 42%; width: 16%; height: 10%;
-  border-radius: 50% 50% 60% 60% / 60% 60% 40% 40%;
-}
-
-.region.chest {
-  top: 18%; left: 33%; width: 34%; height: 17%;
-  border-radius: 40% 40% 50% 50% / 60% 60% 40% 40%;
-}
-
-.region.abdomen {
-  top: 34%; left: 35%; width: 30%; height: 14%;
-  border-radius: 40% 40% 50% 50% / 40% 40% 60% 60%;
-}
-
-.region.left-arm {
-  top: 19%; left: 17%; width: 14%; height: 30%;
-  transform: rotate(24deg); 
-  /* Rounded Taper: Wide shoulder, narrow wrist */
-  border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%;
-  clip-path: none;
-}
-
-.region.right-arm {
-  top: 19%; right: 17%; width: 14%; height: 30%;
-  transform: rotate(-24deg);
-  border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%;
-  clip-path: none;
-}
-
-.region.left-leg {
-  top: 46%; left: 28%; width: 13.5%; height: 48%;
-  transform: rotate(8deg);
-  /* Rounded Taper: Wide thigh, narrow ankle */
-  border-radius: 40% 60% 50% 50% / 35% 35% 65% 65%;
-  clip-path: none;
-}
-
-.region.right-leg {
-  top: 46%; right: 28%; width: 13.5%; height: 48%;
-  transform: rotate(-8deg);
-  border-radius: 60% 40% 50% 50% / 35% 35% 65% 65%;
-  clip-path: none;
-}
-
-/* --- Back View (Matched Symmetry) --- */
-.region.back-head {
-  top: 6.5%; left: 42%; width: 16%; height: 10%;
+  filter: blur(80px);
+  opacity: 0.6;
   border-radius: 50%;
+  will-change: transform;
+  animation: floatBlobs 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.region.upper-back {
-  top: 18%; left: 32%; width: 36%; height: 19%;
-  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+.background-blobs::before {
+  top: -10%; left: -10%;
+  width: 50vw; max-width: 600px; aspect-ratio: 1;
+  background: radial-gradient(circle, var(--primary-light), transparent 70%);
 }
 
-.region.lower-back {
-  top: 38%; left: 35%; width: 30%; height: 13%;
-  border-radius: 40% 40% 50% 50% / 30% 30% 60% 60%;
+.background-blobs::after {
+  bottom: -10%; right: -10%;
+  width: 60vw; max-width: 700px; aspect-ratio: 1;
+  background: radial-gradient(circle, #e0f2fe, transparent 70%);
+  animation-delay: -10s;
 }
 
-.region.back-left-arm {
-  top: 19%; left: 17%; width: 14%; height: 30%;
-  transform: rotate(24deg);
-  border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%;
-  clip-path: none;
+@keyframes floatBlobs {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30px, 30px) scale(1.1); }
 }
 
-.region.back-right-arm {
-  top: 19%; right: 17%; width: 14%; height: 30%;
-  transform: rotate(-24deg);
-  border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%;
-  clip-path: none;
-}
-
-.region.back-left-leg {
-  top: 46%; left: 28%; width: 13.5%; height: 48%;
-  transform: rotate(8deg);
-  border-radius: 40% 60% 50% 50% / 35% 35% 65% 65%;
-  clip-path: none;
-}
-
-.region.back-right-leg {
-  top: 46%; right: 28%; width: 13.5%; height: 48%;
-  transform: rotate(-8deg);
-  border-radius: 60% 40% 50% 50% / 35% 35% 65% 65%;
-  clip-path: none;
-}
-
-
-/* =====================================================
-   BUTTONS (Screen 2 List & Actions)
-===================================================== */
-.extra-regions-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 24px;
-}
-
-.region-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* =========================================
+   3. MAIN LAYOUT & CONTAINER
+   ========================================= */
+.container {
   width: 100%;
-  padding: 14px;
-  background-color: #fff;
-  border: 2px solid var(--border-light);
-  border-radius: 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-main);
-  transition: all 0.2s ease;
-}
-.region-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
-.region-btn.selected {
-  background-color: var(--primary-soft);
-  border-color: var(--primary);
-  color: var(--primary-hover);
-}
-
-.btn-primary {
-  display: block;
-  width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-  border-radius: 999px;
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
-  box-shadow: 0 8px 20px var(--primary-glow);
-  transition: transform 0.2s;
-  margin-top: 24px;
-}
-.btn-primary:hover { transform: translateY(-2px); }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-
-.btn-secondary {
-  padding: 12px 24px;
-  background: #fff;
-  border: 2px solid var(--border-light);
-  border-radius: 16px;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
-
-.button-group {
-    display: flex;
-    gap: 12px;
-    margin-top: 24px;
-}
-.button-group .btn-secondary { flex: 0 0 auto; }
-.button-group #add-symptoms-btn { flex: 1; }
-
-.selection-display {
-    text-align: center;
-    color: var(--primary);
-    font-weight: 600;
-    margin-top: 12px;
-}
-
-/* =====================================================
-   RESULTS & SUMMARY
-===================================================== */
-.summary-box {
-    background: var(--primary-soft);
-    padding: 20px;
-    border-radius: 16px;
-    margin-bottom: 24px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-.summary-item { font-size: 14px; color: var(--text-muted); }
-.summary-item strong { color: var(--text-main); display: block; margin-bottom: 4px; }
-.summary-item.full-width { grid-column: 1 / -1; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 12px; }
-
-.disclaimer {
-    background: #fff7ed;
-    border: 1px solid #ffedd5;
-    color: #c2410c;
-    padding: 16px;
-    border-radius: 12px;
-    font-size: 13px;
-    margin: 24px 0;
-    line-height: 1.5;
-}
-
-.btn-outline {
-    width: 100%;
-    padding: 14px;
-    border: 2px dashed var(--border-light);
-    color: var(--text-muted);
-    border-radius: 12px;
-    font-weight: 600;
-}
-.btn-outline:hover { border-color: var(--text-muted); color: var(--text-main); }
-
-/* =====================================================
-   SCREEN 3: SYMPTOM LIST
-===================================================== */
-.symptom-grid {
-  display: grid;
-  grid-template-columns: 1fr; 
-  gap: 16px;
-  width: 100%;
-}
-
-.symptom-item {
-  background: #fff;
-  border: 2px solid var(--border-light);
-  border-radius: 16px;
-  padding: 16px;
+  max-width: 900px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-main);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  transition: border-color 0.2s ease;
+  max-height: 90vh;
+  position: relative;
+  z-index: 10;
 }
 
-.symptom-item.has-severity {
-  border-color: var(--primary);
-  background: var(--primary-soft);
+main {
+  padding: 32px;
+  overflow-y: auto;
+  flex: 1;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
 
-.symptom-name {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-main);
+/* =========================================
+   4. HEADER & PROGRESS STEPPER
+   ========================================= */
+header {
+  padding: 24px 32px;
+  background: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
-.severity-scale {
-  display: flex;
-  gap: 6px;
-  width: 100%;
+.header-top {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
 }
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 40px; height: 40px; background: var(--primary-light); color: var(--primary);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;
+}
+.brand-text h1 { font-size: 20px; font-weight: 800; color: var(--text-main); line-height: 1.2; }
+.brand-text p { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+
+.progress-container {
+  display: flex; align-items: center; justify-content: center;
+  max-width: 500px; margin: 0 auto;
+}
+
+.step {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  position: relative; z-index: 2; flex-shrink: 0;
+}
+
+.step-circle {
+  width: 32px; height: 32px; background: #f1f5f9; color: var(--text-muted);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; transition: all 0.4s ease; border: 2px solid #f1f5f9;
+}
+
+.step span {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);
+  opacity: 0; transform: translateY(-5px); transition: all 0.3s ease; position: absolute; top: 40px; white-space: nowrap;
+}
+
+.step.active .step-circle {
+  background: var(--primary); color: white; border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-light); transform: scale(1.1);
+}
+.step.active span { opacity: 1; color: var(--primary-dark); transform: translateY(0); }
+
+.progress-container .line {
+  flex: 1; height: 2px; background: #e2e8f0; margin: 0 10px; margin-bottom: 2px;
+}
+
+/* =========================================
+   5. SCREENS
+   ========================================= */
+.screen { display: none; opacity: 0; transform: translateY(10px); }
+.screen.active {
+  display: flex; flex-direction: column; gap: 24px; opacity: 1; transform: translateY(0);
+  animation: slideFadeIn 0.5s ease forwards;
+}
+@keyframes slideFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.screen-header { text-align: center; margin-bottom: 8px; }
+h2 { font-size: 22px; font-weight: 700; color: var(--text-main); }
+.helper-text { color: var(--text-muted); font-size: 15px; }
+
+/* =========================================
+   6. FORMS & INPUTS
+   ========================================= */
+label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);
+  letter-spacing: 0.5px; margin-bottom: 8px; display: block;
+}
+fieldset { border: none; margin: 0; padding: 0; }
+legend { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.sub-legend { font-size: 14px; color: var(--text-main); margin-bottom: 12px; margin-top: -4px; }
+
+input[type="number"] {
+  width: 100%; padding: 16px; border: 2px solid var(--border-color); border-radius: var(--radius-md);
+  font-size: 18px; font-weight: 600; color: var(--text-main); background: #f8fafc; transition: all 0.2s;
+}
+input[type="number"]:focus {
+  outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.gender-buttons, .question-buttons { display: flex; gap: 12px; }
+.gender-buttons button, .question-buttons button {
+  flex: 1; padding: 16px; background: #fff; border: 2px solid var(--border-color);
+  border-radius: var(--radius-md); color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+}
+
+.gender-buttons button:hover, .question-buttons button:hover {
+  border-color: var(--primary-light); color: var(--primary); transform: translateY(-2px);
+}
+.gender-buttons button.active, .question-buttons button.active {
+  background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark);
+}
+
+.gender-buttons button { display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 600; }
+.gender-buttons button i { font-size: 24px; }
+.question-buttons button { text-align: left; }
+.question-buttons .btn-title { display: block; font-weight: 700; font-size: 16px; margin-bottom: 4px; color: var(--text-main); }
+.question-buttons .btn-desc { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+.question-buttons button.active .btn-title { color: var(--primary-dark); }
+.question-buttons button.active .btn-desc { color: var(--primary); }
+
+/* =========================================
+   7. BODY MAP (IMPROVED COORDINATES)
+   ========================================= */
+.body-map-wrapper {
+  display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; padding: 16px 0;
+}
+.body-map h3 {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);
+  text-align: center; margin-bottom: 12px;
+}
+.body-map-container {
+  position: relative; width: 280px; aspect-ratio: 1/2; margin: 0 auto;
+}
+.body-image img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+
+.region {
+  position: absolute; cursor: pointer; z-index: 10;
+  /* border: 1px solid rgba(0,0,0,0.1); Uncomment to debug positions */ 
+}
+
+/* Hover Effect */
+.region::after {
+  content: ''; position: absolute; inset: 0; background: var(--primary); opacity: 0;
+  border-radius: inherit; transition: all 0.2s ease;
+}
+.region:hover::after { opacity: 0.2; transform: scale(1.05); }
+.region.selected::after {
+  opacity: 0.25; box-shadow: 0 0 0 2px var(--primary); animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0px rgba(13, 148, 136, 0.4); }
+  100% { box-shadow: 0 0 0 10px rgba(13, 148, 136, 0); }
+}
+
+/* Labels (FIX: Only show on Hover) */
+.region-label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -150%) scale(0.9);
+  background: rgba(15, 23, 42, 0.95); color: white; padding: 4px 10px; border-radius: 12px;
+  font-size: 11px; font-weight: 700; opacity: 0; pointer-events: none; white-space: nowrap; z-index: 20;
+  transition: 0.2s;
+}
+/* Removed .region.selected .region-label to fix Issue #2 */
+.region:hover .region-label { opacity: 1; transform: translate(-50%, -180%) scale(1); }
+
+/* Refined Coordinates (Issue #1) */
+/* Head: Centered at 50% */
+.region.head { top: 6%; left: 42%; width: 16%; height: 12%; border-radius: 50%; }
+
+/* Chest: Wider and higher up */
+.region.chest { top: 20%; left: 32%; width: 36%; height: 15%; border-radius: 40% 40% 50% 50% / 50% 50% 40% 40%; }
+
+/* Abdomen: Lower torso */
+.region.abdomen { top: 36%; left: 34%; width: 32%; height: 14%; border-radius: 40% 40% 40% 40%; }
+
+/* Arms: Tapered */
+.region.left-arm { 
+    top: 20%; left: 16%; width: 15%; height: 28%; 
+    transform: rotate(25deg); border-radius: 30px; 
+}
+.region.right-arm { 
+    top: 20%; right: 16%; width: 15%; height: 28%; 
+    transform: rotate(-25deg); border-radius: 30px; 
+}
+
+/* Legs: Longer */
+.region.left-leg { 
+    top: 51%; left: 29%; width: 14%; height: 40%; 
+    transform: rotate(6deg); border-radius: 30px; 
+}
+.region.right-leg { 
+    top: 51%; right: 29%; width: 14%; height: 40%; 
+    transform: rotate(-6deg); border-radius: 30px; 
+}
+
+/* Back View Mirrored */
+.region.back-head { top: 6%; left: 42%; width: 16%; height: 12%; border-radius: 50%; }
+.region.upper-back { top: 20%; left: 32%; width: 36%; height: 16%; border-radius: 16px; }
+.region.lower-back { top: 38%; left: 34%; width: 32%; height: 12%; border-radius: 16px; }
+.region.back-left-arm { top: 20%; left: 16%; width: 15%; height: 28%; transform: rotate(25deg); border-radius: 30px; }
+.region.back-right-arm { top: 20%; right: 16%; width: 15%; height: 28%; transform: rotate(-25deg); border-radius: 30px; }
+.region.back-left-leg { top: 51%; left: 29%; width: 14%; height: 40%; transform: rotate(6deg); border-radius: 30px; }
+.region.back-right-leg { top: 51%; right: 29%; width: 14%; height: 40%; transform: rotate(-6deg); border-radius: 30px; }
+
+
+/* =========================================
+   8. EXTRA BUTTONS & ACTIONS
+   ========================================= */
+.extra-regions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.region-btn {
+  padding: 14px; background: #fff; border: 1px solid var(--border-color);
+  border-radius: var(--radius-md); font-weight: 600; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s;
+}
+.region-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
+.region-btn.selected { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
+
+.button-group { display: flex; gap: 12px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-color); }
+.btn-primary {
+  width: 100%; padding: 18px; background: var(--primary); color: white;
+  font-weight: 700; font-size: 16px; border-radius: 12px;
+  box-shadow: 0 4px 12px var(--primary-glow); display: flex; justify-content: center;
+  align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;
+}
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+.btn-secondary {
+  padding: 14px 24px; border: 1px solid #cbd5e1; border-radius: 12px; font-weight: 600;
+  color: var(--text-muted); background: white; cursor: pointer; transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--text-main); color: var(--text-main); background: #f8fafc; }
+#add-symptoms-btn { flex: 1; }
+.selection-display { text-align: center; color: var(--primary); font-weight: 700; min-height: 24px; font-size: 14px; }
+.action-wrapper { margin-top: 16px; }
+
+/* =========================================
+   9. RESULTS
+   ========================================= */
+.summary-box {
+  background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md);
+  padding: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px;
+}
+.result-card {
+  background: white; padding: 20px; border-radius: 16px; border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 12px;
+  animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.result-header { display: flex; align-items: center; gap: 16px; }
+.result-icon-box {
+  width: 44px; height: 44px; background: var(--primary-light); color: var(--primary);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+}
+.result-title { font-weight: 800; font-size: 17px; color: var(--text-main); text-transform: capitalize; }
+.type-badge {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 8px;
+  border-radius: 8px; background: #f1f5f9; color: var(--text-muted);
+}
+.confidence-bar-bg { height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; margin-top: 8px; }
+.confidence-bar-fill { height: 100%; background: var(--primary); border-radius: 3px; }
+.confidence-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+.disclaimer {
+  background: #fff7ed; border: 1px solid #ffedd5; color: #c2410c; padding: 16px;
+  border-radius: 12px; font-size: 13px; line-height: 1.5; display: flex; gap: 12px; margin-bottom: 24px;
+}
+.btn-outline {
+  width: 100%; padding: 14px; border: 2px dashed #cbd5e1; border-radius: 12px; color: var(--text-muted);
+  font-weight: 700; background: transparent; cursor: pointer; transition: all 0.2s;
+}
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+/* =========================================
+   10. SYMPTOM GRID (FIXED "NONE" BOX)
+   ========================================= */
+.symptom-grid { display: grid; gap: 12px; }
+.symptom-item {
+  background: white; border: 1px solid var(--border-color); padding: 16px;
+  border-radius: 16px; transition: all 0.2s;
+}
+.symptom-item.has-severity { border-color: var(--primary); background: #f0fdfa; }
+.symptom-name { font-weight: 700; font-size: 15px; display: block; margin-bottom: 10px; color: var(--text-main); }
+.severity-scale { display: flex; gap: 4px; }
 
 .severity-option {
-  flex: 1;
-  padding: 8px 2px;
-  border-radius: 8px;
-  background: #fff;
-  border: 1px solid var(--border-light);
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 600;
-  text-align: center;
-  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  flex: 1; padding: 10px 0; font-size: 11px; font-weight: 600;
+  background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px;
+  color: var(--text-muted); cursor: pointer; transition: all 0.2s;
 }
 
-.severity-option:hover {
-  transform: translateY(-1px);
-  background: #f8fafc;
-  border-color: #cbd5e1;
-}
+.severity-option:hover { transform: translateY(-2px); border-color: #cbd5e1; }
+.severity-option.selected { color: white; border-color: transparent; transform: scale(1.05); }
 
-/* Severity Colors */
-.severity-option[data-sev="0"].selected { background: #64748b; color: white; border-color: #64748b; }
-.severity-option[data-sev="1"].selected { background: var(--sev-0); color: white; border-color: var(--sev-0); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
-.severity-option[data-sev="2"].selected { background: var(--sev-1); color: white; border-color: var(--sev-1); box-shadow: 0 4px 12px rgba(132, 204, 22, 0.25); }
-.severity-option[data-sev="3"].selected { background: var(--sev-3); color: white; border-color: var(--sev-3); box-shadow: 0 4px 12px rgba(251, 146, 60, 0.25); }
-.severity-option[data-sev="4"].selected { background: var(--sev-4); color: white; border-color: var(--sev-4); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); }
+/* FIX: Specific color for 'None' (0) so it isn't white-on-white */
+.severity-option[data-sev="0"].selected { background: var(--sev-0); } 
+.severity-option[data-sev="1"].selected { background: var(--sev-1); }
+.severity-option[data-sev="2"].selected { background: var(--sev-2); }
+.severity-option[data-sev="3"].selected { background: var(--sev-3); }
+.severity-option[data-sev="4"].selected { background: var(--sev-4); }
 
-/* Region Labels */
-.region-label {
-  position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -150%) scale(0.9);
-  background: rgba(15,23,42,0.95);
-  color: white;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 700;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.2s;
-  white-space: nowrap;
-  z-index: 20;
+/* =========================================
+   11. RESPONSIVE
+   ========================================= */
+@media (max-width: 600px) {
+  header { padding: 16px; }
+  main { padding: 20px; }
+  .step span { display: none; }
+  .summary-box { grid-template-columns: 1fr; }
+  .gender-buttons button { padding: 12px; font-size: 13px; }
+  .btn-primary { padding: 16px; }
+  h2 { font-size: 20px; }
 }
-.region:hover .region-label, .region.selected .region-label {
-  opacity: 1; transform: translate(-50%, -180%) scale(1);
-}
-.region-dot { display: none; }
