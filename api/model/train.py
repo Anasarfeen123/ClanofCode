@@ -23,7 +23,7 @@ DISEASE_TYPE_RAW = {
     "hepatitis c": "chronic",
     "hepatitis d": "chronic",
     "hepatitis e": "chronic",
-    "hepatitis a": "acute",   # IMPORTANT: A & E are acute
+    "hepatitis a": "acute",
     "chronic cholestasis": "chronic",
     "alcoholic hepatitis": "chronic",
     "arthritis": "chronic",
@@ -65,6 +65,7 @@ DISEASE_TYPE_RAW = {
 # =====================================================
 DATA_PATH = "symp_data.csv"
 df = pd.read_csv(DATA_PATH)
+
 # =====================================================
 # Normalize disease names (IMPORTANT)
 # =====================================================
