@@ -14,8 +14,10 @@ from sklearn.metrics import accuracy_score, f1_score
 # Get absolute path to the project root to find csv
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.dirname(BASE_DIR))
-DATA_PATH = os.path.join(PROJECT_ROOT, "symp_data.csv")
+DATA_DIR = os.path.join(PROJECT_ROOT, "data")
+DATA_PATH = os.path.join(DATA_DIR, "symp_data.csv")
 
+RANDOM_STATE = 18
 DISEASE_TYPE_RAW = {
     # Chronic
     "aids": "chronic",
@@ -136,9 +138,9 @@ def train():
         
         # Split
         if y.value_counts().min() < 2:
-            X_train, X_test, y_train, y_test = train_test_split(X_sel, y, test_size=0.3, random_state=42)
+            X_train, X_test, y_train, y_test = train_test_split(X_sel, y, test_size=0.3, random_state=RANDOM_STATE)
         else:
-            X_train, X_test, y_train, y_test = train_test_split(X_sel, y, test_size=0.3, stratify=y, random_state=42)
+            X_train, X_test, y_train, y_test = train_test_split(X_sel, y, test_size=0.3, stratify=y, random_state=RANDOM_STATE)
 
         # Pipeline
         model = Pipeline([
